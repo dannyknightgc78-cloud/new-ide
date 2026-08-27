@@ -4,12 +4,17 @@ Live at **https://queendar.com** — LGBTQ+ travel safety / nightlife companion 
 
 Performer-hub portal was replaced on Hostman `:3011`; backup remains at `/opt/queendar-portal`.
 
-## Deploy
+## Deploy (from zip)
+
+Canonical app zip: `queendar-src-may.zip` (also on Mac as `~/projects/ghost-home/uploads/queendar.zip`).
+
+Note: Desktop `Archives/queendar.zip` is Cursor session metadata only — not the app.
 
 ```bash
-cd queendar
 # needs .env with VITE_SUPABASE_URL + VITE_SUPABASE_ANON_KEY
-bash scripts/deploy-hostman-safety.sh hostman
+bash queendar/scripts/deploy-from-zip.sh queendar-src-may.zip
+# or from Mac folder:
+# bash scripts/deploy-hostman-safety.sh hostman
 ```
 
 ## Local

@@ -1,15 +1,7 @@
-# Haven
+# Queendar
 
-Family safety app site — cryptographically verified digital sanctuary.
+Target product: **Queendar safety app** (source of truth is the Queendar GitHub repo).
 
-Live: https://haven.dannygc.cloud/
+Live site today (stale / wrong content vs project): https://queendar.dannygc.cloud/ — currently shows “Sovereign Performance Hub”, not the safety app.
 
-This repo mirrors the Haven product site (not GhostGrid’s demo agents such as `queendar`).
-
-## Local
-
-```bash
-npm start
-```
-
-Open http://localhost:4173
+This `new-ide` workspace does not contain the Queendar source. Connect or link the Queendar GitHub repository to continue.

@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Haven">
-  <rect width="512" height="512" rx="96" fill="#ffffff"/>
-  <path d="M256 56 96 120v128c0 112 80 184 160 232 80-48 160-120 160-232V120z" fill="#1f7a5c"/>
-  <path d="M256 96 136 144v104c0 90 64 148 120 188 56-40 120-98 120-188V144z" fill="rgba(255,255,255,.10)"/>
-  <path d="m180 264 56 56 116-120" stroke="#ffffff" stroke-width="34" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>

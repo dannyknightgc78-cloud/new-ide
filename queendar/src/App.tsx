@@ -4,6 +4,7 @@ import type { Session } from '@supabase/supabase-js';
 import AuthScreen from './components/AuthScreen';
 import Onboarding from './components/Onboarding';
 import Dashboard from './components/Dashboard';
+import CircularStickyQR from './components/CircularStickyQR';
 
 type AppState = 'loading' | 'auth' | 'onboarding' | 'dashboard';
 
@@ -65,12 +66,17 @@ export default function App() {
     );
   }
 
-  if (appState === 'auth') return <AuthScreen onGuest={handleGuest} />;
-  if (appState === 'onboarding') return <Onboarding onComplete={handleOnboardingComplete} />;
-  if (appState === 'dashboard') {
+  let screen = <AuthScreen onGuest={handleGuest} />;
+  if (appState === 'onboarding') screen = <Onboarding onComplete={handleOnboardingComplete} />;
+  else if (appState === 'dashboard') {
     const userId = isGuest ? GUEST_USER_ID : session?.user.id;
-    return userId ? <Dashboard userId={userId} /> : <AuthScreen onGuest={handleGuest} />;
+    screen = userId ? <Dashboard userId={userId} /> : <AuthScreen onGuest={handleGuest} />;
   }
 
-  return <AuthScreen onGuest={handleGuest} />;
+  return (
+    <>
+      {screen}
+      <CircularStickyQR />
+    </>
+  );
 }

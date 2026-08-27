@@ -1,0 +1,196 @@
+<!--
+/**
+ * @license
+ * Copyright (c) 2026 Haven // Your Sanctuary. All rights reserved.
+ *
+ * NOTICE: All information contained herein is, and remains the property of
+ * Haven and its suppliers, if any. The intellectual and technical concepts
+ * contained herein are proprietary to Haven and its suppliers and may be
+ * covered by Spanish and international patents, patents in process, and are
+ * protected by trade secret or copyright law.
+ *
+ * Dissemination of this information or reproduction of this material is
+ * strictly forbidden unless prior written permission is obtained from Haven.
+ *
+ * Verification Token Hash: ED25519_CORE_SECURITY_ENFORCED
+ */
+-->
+<!--
+/**
+ * @license
+ * Copyright (c) 2026 Haven // Your Sanctuary. All rights reserved.
+ */
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#1f7a5c" />
+  <meta name="description" content="Haven Family browser extension privacy policy — sovereign, local-first, proof-of-integrity only." />
+  <title>Haven — Privacy Policy (Browser Extension)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/haven.css" />
+  <link rel="stylesheet" href="assets/css/landing.css" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 2 4 7v8c0 7 5 12 12 15 7-3 12-8 12-15V7z' fill='%231f7a5c'/%3E%3Cpath d='m11 16 3.5 3.5L22 12' stroke='white' stroke-width='2.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+  <style>
+    .legal { max-width: 720px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+    .legal h1 { font-size: 1.75rem; margin-bottom: 0.5rem; }
+    .legal .updated { color: var(--ink-faint); font-size: 0.9rem; margin-bottom: 2rem; }
+    .legal h2 { font-size: 1.15rem; margin: 1.75rem 0 0.5rem; color: var(--haven); }
+    .legal p, .legal li { line-height: 1.65; color: var(--ink-muted); }
+    .legal ul { padding-left: 1.25rem; }
+    .legal a { color: var(--haven-bright); }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a class="brand" href="index.html" aria-label="Haven home">
+        <svg class="shield" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2 4 7v8c0 7 5 12 12 15 7-3 12-8 12-15V7z" fill="#1f7a5c"/><path d="m11 16 3.5 3.5L22 12" stroke="#fff" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span class="brand-name"><b>Haven</b></span>
+      </a>
+      <nav class="site-nav" aria-label="Primary">
+        <a class="navlink" href="index.html">Home</a>
+        <a class="navlink" href="faq.html">FAQ</a>
+        <a class="navlink" href="help.html">Help</a>
+        <a class="navlink" href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="legal">
+    <h1>Privacy Policy — Haven Family Browser Extension</h1>
+    <p class="updated">Effective date: 2 July 2026 · Operator: Danny Knight / Haven (haven.dannygc.cloud)</p>
+
+    <p>
+      Haven Family is a <strong>sovereign infrastructure interface</strong> for your browser — a Visible Mentor that connects
+      to your Haven Node (Haven cloud or your own self-hosted node). The Extension is <strong>local-first</strong>: protection
+      settings, admin gate credentials, vault data, and block counters stay on your device. We do <strong>not</strong> read
+      messages, page text, photos, DMs, keystrokes, clipboard contents, or full browsing history.
+    </p>
+
+    <h2>Single purpose</h2>
+    <p>
+      The Extension has one job: maintain an encrypted connection to your Haven Node so families can prove agreed protection
+      rules are intact, reflect admin commands (including Internet pause), and show a calm on-page mentor badge.
+      It is not a surveillance tool.
+    </p>
+
+    <h2>What stays on your device</h2>
+    <ul>
+      <li><strong>Admin gate</strong> — master-password hash and optional admin PIN hash (never transmitted).</li>
+      <li><strong>Vault</strong> — encrypted credential bundle and salt (local only; master password never leaves hardware).</li>
+      <li><strong>Preferences</strong> — device label, badge setting, admin protection policy, popup allowlists.</li>
+      <li><strong>Block counters</strong> — aggregate counts (ads blocked, scams deflected, etc.).</li>
+      <li><strong>Session minutes</strong> — approximate minutes the browser has been open (for admin dashboard summaries).</li>
+      <li><strong>Blocked-event log (local)</strong> — up to 100 recent entries with hostname, block kind, and a short snippet (≤200 characters) when a scam or popup guard fires. Stored locally; optional sync to your Haven Node if enrolled.</li>
+    </ul>
+
+    <h2>What is sent to your Haven Node</h2>
+    <p>
+      API traffic uses <strong>HTTPS</strong> to the endpoint you configure (default <code>https://haven.dannygc.cloud</code>;
+      Sovereign deployments may point to your own node). The developer has <strong>no access</strong> to self-hosted nodes.
+      Transmissions are limited to:
+    </p>
+    <ul>
+      <li><strong>Device enrollment</strong> — stable device ID, install fingerprint, child/device label, platform, extension version, and license token you enter.</li>
+      <li><strong>License validation</strong> — your ABXLIC1 token is verified against your Haven Node (cloud or sovereign).</li>
+      <li><strong>Integrity check-ins</strong> — periodic signed heartbeats confirming the Extension is installed and healthy. These pings carry <strong>no URLs, page content, or browsing history</strong>.</li>
+      <li><strong>Admin policy sync</strong> — protection rules you set in Portal Admin (adult filter, social limits, site exclusions).</li>
+      <li><strong>Blocked-event log (optional)</strong> — hostname, block kind, truncated snippet, and device ID when a block event is synced.</li>
+      <li><strong>Upgrade prompts (minimal)</strong> — if you click an in-extension upgrade CTA, a single <code>cta_click</code> event (source label only) may be sent to your configured API base. No page data.</li>
+    </ul>
+
+    <h2>What we do not collect</h2>
+    <ul>
+      <li>Message content, photos, DMs, or social posts</li>
+      <li>Full browsing history or a log of every URL you visit</li>
+      <li>Keystrokes, form fields, or clipboard contents</li>
+      <li>Microphone, camera, or GPS location</li>
+      <li>Third-party advertising profiles or cross-site tracking</li>
+    </ul>
+
+    <h2>Safety controls — Kill-Switch and Chain of Trust</h2>
+
+    <p><strong>Kill-Switch (Internet pause)</strong></p>
+    <p>
+      When an admin triggers the kill-switch in Haven Portal Admin, your Haven Node marks the enrolled device as
+      <em>locked</em>. On the next integrity check-in, the Extension learns that state and, when
+      <strong>Enforce internet pause</strong> is enabled (default), blocks new top-level navigations in
+      <strong>this browser only</strong> — redirecting to a calm lock page. Trusted Haven domains and your configured
+      site exclusions remain reachable. The kill-switch does <strong>not</strong> upload browsing activity; it only
+      reflects a signed admin command already stored on your Haven Node.
+    </p>
+
+    <p><strong>Chain of Trust (chain-sealing)</strong></p>
+    <p>
+      Haven maintains an append-only <strong>integrity ledger</strong> on your Haven Node. Each successful device
+      check-in is Ed25519-sealed into this chain. The Extension polls chain status (<code>PASS</code> / <code>FAIL</code>),
+      head hash, and entry count — storing only those integrity witnesses locally. Chain-sealing is a
+      <strong>tamper-evident audit trail of check-ins</strong>, not a record of pages visited or content read.
+      If the chain drifts, the Extension shows “system drift” until the ledger is healthy again.
+    </p>
+
+    <h2>Local sovereign helper</h2>
+    <p>
+      During direct/sovereign install, the Extension may talk to a <strong>local helper</strong> at
+      <code>http://127.0.0.1:17888</code> on your machine only — for license pickup, master-password handoff, and
+      update checks. This traffic never leaves your hardware.
+    </p>
+    <p>
+      Optional <strong>C.A.R.L.</strong> maturity moderation (off by default) may call a local agent at
+      <code>http://127.0.0.1:8795</code> when explicitly enabled. No cloud relay.
+    </p>
+
+    <h2>Encryption and third parties</h2>
+    <p>
+      All Haven API traffic uses HTTPS/WSS where applicable. We do <strong>not</strong> sell your information,
+      share it with advertisers, or embed third-party analytics SDKs in the Extension. Stripe handles payments on
+      the Haven website; the Extension does not process payment card data.
+    </p>
+
+    <h2>Permissions explained</h2>
+    <ul>
+      <li><strong>storage</strong> — save enrollment and settings locally</li>
+      <li><strong>alarms</strong> — schedule integrity heartbeats without a persistent background page</li>
+      <li><strong>declarativeNetRequest</strong> — apply ad/scam blocks and optional Internet-pause navigation blocks</li>
+      <li><strong>activeTab</strong> — show the Visible Mentor badge on the current page</li>
+      <li><strong>notifications</strong> — alert users to protection state changes</li>
+      <li><strong>Host access (http/https)</strong> — inject the on-page mentor badge and reach your Haven Node (no content exfiltration)</li>
+    </ul>
+
+    <h2>Children and families</h2>
+    <p>
+      Haven Family is intended for use by families with administrative consent. Admins configure and manage the Extension.
+      We follow data-minimisation principles aligned with COPPA and GDPR design intent.
+    </p>
+
+    <h2>Data retention and deletion</h2>
+    <p>
+      Device records can be removed from Portal Admin by the account holder. Uninstalling the Extension removes local
+      storage on that browser. Contact us to request server-side deletion of enrollment records tied to your account.
+    </p>
+
+    <h2>Policy updates</h2>
+    <p>
+      We may update this policy. Material changes will be posted here and noted in the Haven dashboard. Continued use
+      after the effective date constitutes acceptance of the revised policy.
+    </p>
+
+    <h2>Contact</h2>
+    <p>
+      Privacy questions: <a href="/cdn-cgi/l/email-protection#f195909f9f889a9f989699859692c6c9b1969c90989ddf929e9c"><span class="__cf_email__" data-cfemail="d0b4b1bebea9bbbeb9b7b8a4b7b3e7e890b7bdb1b9bcfeb3bfbd">[email&#160;protected]</span></a><br />
+      General support: <a href="help.html">haven.dannygc.cloud/help.html</a>
+    </p>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p class="muted" style="text-align:center;padding:2rem 0">&copy; 2026 Haven — your digital sanctuary</p>
+    </div>
+  </footer>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script></body>
+</html>

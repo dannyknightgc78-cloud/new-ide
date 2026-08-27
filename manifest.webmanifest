@@ -1,0 +1,40 @@
+{
+  "name": "Haven — Family Digital Sanctuary",
+  "short_name": "Haven",
+  "description": "Cryptographically verified, privacy-first family digital safety. Proof of safety, not surveillance.",
+  "id": "/child.html",
+  "start_url": "./child.html?source=pwa&device=1",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0d2b22",
+  "theme_color": "#1f7a5c",
+  "lang": "en",
+  "categories": ["productivity", "lifestyle", "utilities"],
+  "icons": [
+    {
+      "src": "assets/icons/haven-icon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icons/haven-maskable.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Portal Admin",
+      "short_name": "Ops",
+      "url": "./ops.html"
+    },
+    {
+      "name": "My Portal",
+      "short_name": "Portal",
+      "url": "./child.html"
+    }
+  ]
+}

@@ -1,0 +1,403 @@
+/**
+ * @license
+ * Copyright (c) 2026 Haven // Your Sanctuary. All rights reserved.
+ *
+ * NOTICE: All information contained herein is, and remains the property of
+ * Haven and its suppliers, if any. The intellectual and technical concepts
+ * contained herein are proprietary to Haven and its suppliers and may be
+ * covered by Spanish and international patents, patents in process, and are
+ * protected by trade secret or copyright law.
+ *
+ * Dissemination of this information or reproduction of this material is
+ * strictly forbidden unless prior written permission is obtained from Haven.
+ *
+ * Verification Token Hash: ED25519_CORE_SECURITY_ENFORCED
+ */
+
+/**
+ * @license
+ * Copyright (c) 2026 Haven // Your Sanctuary. All rights reserved.
+ *
+ * Pricing page — plan cards, billing toggle, feature matrix.
+ */
+
+/* ---- Secondary page hero (pricing, downloads, FAQ, etc.) */
+.page-hero {
+  padding-top: 3.5rem;
+  padding-bottom: 2.5rem;
+  background:
+    radial-gradient(ellipse 55% 70% at 90% -15%, var(--haven-soft), transparent 58%),
+    var(--paper);
+}
+
+/* ---- Billing toggle -------------------------------------- */
+.billing-toggle-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .85rem;
+  flex-wrap: wrap;
+}
+.billing-toggle-label {
+  font-size: .82rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.billing-toggle {
+  display: inline-flex;
+  padding: .28rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+.billing-toggle-btn {
+  border: none;
+  background: transparent;
+  color: var(--ink-soft);
+  font: inherit;
+  font-size: .86rem;
+  font-weight: 650;
+  padding: .55rem 1rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+}
+.billing-toggle-btn.active {
+  background: var(--haven);
+  color: #fff;
+  box-shadow: 0 4px 12px var(--haven-glow);
+}
+.billing-save-badge {
+  margin-left: .35rem;
+  font-size: .72rem;
+  font-weight: 700;
+  color: var(--verified);
+}
+
+/* ---- Plan cards ------------------------------------------ */
+.pricing-free-wrap {
+  max-width: min(480px, 100%);
+  margin: 0 auto 2rem;
+}
+.pricing-free-wrap .price-card {
+  border-color: var(--line-strong);
+  box-shadow: var(--shadow-md);
+  background: linear-gradient(180deg, var(--surface) 0%, var(--surface-2) 100%);
+}
+.pricing-free-wrap .price-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--haven) 0%, var(--gold) 100%);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+.pricing-grid {
+  display: grid;
+  gap: 1.25rem;
+  margin: 0 auto;
+  max-width: 1080px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  align-items: stretch;
+}
+.pricing-grid-paid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.35rem;
+}
+.price-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  height: 100%;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: 1.5rem 1.35rem 1.35rem;
+  transition: border-color .2s, box-shadow .2s, transform .15s;
+  overflow: hidden;
+}
+.price-card:hover {
+  border-color: var(--line-strong);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+.price-card-featured {
+  border-color: var(--haven);
+  box-shadow: 0 12px 36px var(--haven-glow);
+}
+.price-card-sovereign {
+  border-color: var(--gold);
+  background: linear-gradient(180deg, var(--gold-soft) 0%, var(--surface) 42%);
+}
+.tier-free { background: var(--surface-2); }
+.price-badge {
+  position: absolute;
+  top: -11px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: .28rem .75rem;
+  border-radius: 999px;
+  font-size: .68rem;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  background: var(--haven);
+  color: #fff;
+  white-space: nowrap;
+}
+.price-save-badge {
+  position: absolute;
+  top: .85rem;
+  right: .85rem;
+  padding: .22rem .55rem;
+  border-radius: 999px;
+  font-size: .68rem;
+  font-weight: 700;
+  background: var(--verified-soft);
+  color: var(--verified);
+}
+.price-save-badge-featured { background: var(--haven-soft); color: var(--haven-deep); }
+.price-save-badge-gold { background: var(--gold-soft); color: var(--gold); }
+.price-head {
+  margin-bottom: 1rem;
+  min-width: 0;
+}
+.price-card:has(.price-save-badge:not([hidden])) .price-head {
+  padding-right: 4.5rem;
+}
+.price-head .pill {
+  max-width: 100%;
+  white-space: normal;
+  line-height: 1.35;
+  text-align: center;
+  justify-content: center;
+}
+.price-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: .45rem .65rem;
+}
+.price-compare {
+  font-size: .88rem;
+  font-weight: 600;
+  color: var(--ink-faint);
+  text-decoration: line-through;
+}
+.price-compare[hidden] { display: none; }
+.price-amount {
+  display: flex;
+  align-items: baseline;
+  gap: .25rem;
+  margin: .55rem 0 .35rem;
+}
+.price-amount b {
+  font-size: clamp(1.75rem, 4vw, 2.15rem);
+  line-height: 1;
+  color: var(--ink);
+  letter-spacing: -.02em;
+}
+.price-amount span {
+  font-size: .92rem;
+  font-weight: 600;
+  color: var(--ink-faint);
+}
+.price-tagline {
+  font-size: .88rem;
+  line-height: 1.45;
+  color: var(--ink-soft);
+  min-height: 2.6em;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
+}
+.price-card-sovereign .price-tagline {
+  font-size: .84rem;
+  min-height: 0;
+}
+.price-card .btn {
+  white-space: normal;
+  line-height: 1.35;
+  min-height: 2.85rem;
+  padding: .75rem 1rem;
+  margin-top: auto;
+}
+.price-card .btn-label {
+  display: block;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+.price-card .feature-list {
+  list-style: none;
+  display: grid;
+  gap: .65rem;
+  margin: 0 0 1.25rem;
+  flex: 1;
+}
+.price-card .feature-list li {
+  display: flex;
+  gap: .6rem;
+  align-items: flex-start;
+  font-size: .88rem;
+  color: var(--ink-soft);
+}
+.price-card .feature-list li b { color: var(--ink); }
+.cross {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+.cross svg {
+  width: 11px;
+  height: 11px;
+  stroke: var(--ink-faint);
+  stroke-width: 2.5;
+  fill: none;
+}
+
+/* ---- Payments banner ------------------------------------- */
+.beta-banner {
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+  padding: .85rem 1.1rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: var(--haven-soft);
+  text-align: center;
+}
+.beta-banner[hidden] { display: none !important; }
+.beta-banner-label {
+  font-size: .82rem;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--haven-deep);
+}
+.beta-banner-hint {
+  font-size: .86rem;
+  line-height: 1.45;
+  color: var(--ink-soft);
+}
+.beta-banner-hot {
+  border-color: var(--gold);
+  background: var(--gold-soft);
+}
+.field-error {
+  color: var(--alert);
+  font-size: .9rem;
+  font-weight: 600;
+}
+
+/* ---- Feature comparison table ---------------------------- */
+.tier-compare-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  background: var(--surface);
+}
+.tier-compare {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .9rem;
+}
+.tier-compare thead th {
+  padding: 1rem 1.1rem;
+  text-align: left;
+  font-size: .78rem;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--line);
+}
+.tier-compare thead th:not(:first-child) { text-align: center; }
+.tier-compare tbody th,
+.tier-compare tbody td {
+  padding: .75rem 1.1rem;
+  border-top: 1px solid var(--line);
+  vertical-align: middle;
+}
+.tier-compare tbody th {
+  font-weight: 650;
+  color: var(--ink);
+  text-align: left;
+  background: var(--surface);
+}
+.tier-compare tbody td {
+  text-align: center;
+  color: var(--ink-soft);
+}
+.tier-compare tbody tr:nth-child(even) td,
+.tier-compare tbody tr:nth-child(even) th { background: var(--surface-2); }
+.tier-col-free { color: var(--ink-soft); }
+.tier-col-family { color: var(--haven-deep); }
+.tier-col-sovereign { color: var(--gold); }
+.tier-yes { color: var(--verified); font-weight: 700; }
+.tier-no { color: var(--ink-faint); }
+.tier-partial { color: var(--sky); font-weight: 600; }
+.tier-gold { color: var(--gold); font-weight: 700; }
+.tier-compare-note {
+  max-width: 720px;
+  margin: 1.5rem auto 0;
+  padding: 1rem 1.15rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  font-size: .88rem;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.tier-compare-note code {
+  font-family: var(--font-mono);
+  font-size: .82rem;
+  background: var(--surface-2);
+  padding: .12rem .35rem;
+  border-radius: 4px;
+}
+
+@media (max-width: 900px) {
+  .pricing-grid-paid {
+    grid-template-columns: 1fr;
+  }
+  .pricing-grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  }
+  .price-card .btn { font-size: .9rem; }
+  .price-head .pill { font-size: .74rem; }
+}
+
+@media (max-width: 640px) {
+  .tier-compare { font-size: .82rem; }
+  .tier-compare thead th,
+  .tier-compare tbody th,
+  .tier-compare tbody td { padding: .6rem .65rem; }
+  .price-card { padding: 1.25rem 1.1rem 1.1rem; }
+  .price-card:has(.price-save-badge:not([hidden])) .price-head {
+    padding-right: 3.75rem;
+  }
+  .price-save-badge {
+    top: .65rem;
+    right: .65rem;
+    font-size: .64rem;
+    padding: .18rem .45rem;
+  }
+  .price-head .pill { font-size: .72rem; padding: .28rem .65rem; }
+  .price-tagline { font-size: .82rem; min-height: 0; }
+  .price-card-sovereign .price-tagline { font-size: .8rem; }
+  .price-amount b { font-size: clamp(1.55rem, 5vw, 1.85rem); }
+  .price-card .btn { font-size: .84rem; padding: .7rem .85rem; }
+}

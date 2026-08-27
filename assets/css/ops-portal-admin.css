@@ -1,0 +1,355 @@
+/**
+ * @license
+ * Copyright (c) 2026 Haven // Your Sanctuary. All rights reserved.
+ *
+ * NOTICE: All information contained herein is, and remains the property of
+ * Haven and its suppliers, if any. The intellectual and technical concepts
+ * contained herein are proprietary to Haven and its suppliers and may be
+ * covered by Spanish and international patents, patents in process, and are
+ * protected by trade secret or copyright law.
+ *
+ * Dissemination of this information or reproduction of this material is
+ * strictly forbidden unless prior written permission is obtained from Haven.
+ *
+ * Verification Token Hash: ED25519_CORE_SECURITY_ENFORCED
+ */
+
+/**
+ * @license
+ * Copyright (c) 2026 Haven // Your Sanctuary. All rights reserved.
+ *
+ * Portal org settings embedded in ops.html — scoped to avoid clashing with haven.css.
+ */
+
+.ops-portal-admin {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--line);
+  --pa-gold: #c98a36;
+  --pa-gold-soft: rgba(201, 138, 54, 0.15);
+  --pa-panel: #11151c;
+  --pa-panel2: #161b24;
+  --pa-line: #1e2736;
+  --pa-dim: #8a9bb0;
+  --pa-ok: #41ffb0;
+  --pa-err: #ff6b7a;
+}
+
+.ops-portal-admin-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.ops-portal-admin-head h2 {
+  font-size: clamp(1.35rem, 2.5vw, 1.75rem);
+  margin-bottom: 0.25rem;
+}
+
+.ops-portal-admin-head .sub {
+  color: var(--ink-faint);
+  font-size: 0.92rem;
+  max-width: 640px;
+}
+
+.ops-portal-admin .portal-card {
+  background: var(--pa-panel);
+  border: 1px solid var(--pa-line);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.ops-portal-admin .portal-card h2,
+.ops-portal-admin .portal-card h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--pa-gold);
+  letter-spacing: 0.02em;
+}
+
+.ops-portal-admin .portal-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 700px) {
+  .ops-portal-admin .portal-grid { grid-template-columns: 1fr; }
+}
+
+.ops-portal-admin .portal-field { margin-bottom: 1rem; }
+
+.ops-portal-admin .portal-field label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--pa-dim);
+  margin-bottom: 0.35rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.ops-portal-admin .portal-field input,
+.ops-portal-admin .portal-field textarea,
+.ops-portal-admin .portal-field select {
+  width: 100%;
+  padding: 0.65rem 0.85rem;
+  border-radius: 8px;
+  border: 1px solid var(--pa-line);
+  background: var(--pa-panel2);
+  color: var(--ink);
+  font: inherit;
+}
+
+.ops-portal-admin .portal-field textarea { min-height: 80px; resize: vertical; }
+
+.ops-portal-admin .portal-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1.1rem;
+  border-radius: 8px;
+  border: 1px solid var(--pa-gold);
+  background: var(--pa-gold-soft);
+  color: var(--pa-gold);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.ops-portal-admin .portal-btn.primary {
+  background: var(--pa-gold);
+  color: #1a1208;
+  border-color: var(--pa-gold);
+}
+
+.ops-portal-admin .portal-btn.danger {
+  border-color: var(--pa-err);
+  color: var(--pa-err);
+  background: rgba(255, 107, 122, 0.1);
+}
+
+.ops-portal-admin .portal-auth {
+  max-width: 420px;
+  margin: 1rem 0 2rem;
+  padding: 1.5rem;
+  background: var(--pa-panel);
+  border: 1px solid var(--pa-line);
+  border-radius: var(--radius);
+}
+
+.ops-portal-admin .portal-auth h3 { font-size: 1.15rem; margin-bottom: 0.5rem; }
+.ops-portal-admin .portal-auth .sub { color: var(--pa-dim); font-size: 0.9rem; margin-bottom: 1rem; }
+
+.ops-portal-admin .portal-status {
+  padding: 0.5rem 0.85rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  margin-top: 1rem;
+}
+
+.ops-portal-admin .portal-status.ok {
+  background: rgba(65, 255, 176, 0.1);
+  color: var(--pa-ok);
+  border: 1px solid rgba(65, 255, 176, 0.25);
+}
+
+.ops-portal-admin .portal-status.err {
+  background: rgba(255, 107, 122, 0.1);
+  color: var(--pa-err);
+  border: 1px solid rgba(255, 107, 122, 0.25);
+}
+
+.ops-portal-admin .area-list { list-style: none; }
+
+.ops-portal-admin .area-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--pa-line);
+}
+
+.ops-portal-admin .area-item:last-child { border-bottom: none; }
+.ops-portal-admin .area-item .name { font-weight: 600; }
+.ops-portal-admin .area-item .meta { font-size: 0.82rem; color: var(--pa-dim); margin-top: 0.2rem; }
+
+.ops-portal-admin .area-item .badge {
+  font-size: 0.72rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  background: rgba(31, 122, 92, 0.2);
+  color: var(--pa-ok);
+  border: 1px solid rgba(65, 255, 176, 0.2);
+}
+
+.ops-portal-admin .area-item .badge.off {
+  background: rgba(138, 155, 176, 0.15);
+  color: var(--pa-dim);
+  border-color: var(--pa-line);
+}
+
+.ops-portal-admin .member-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: 20px;
+  background: var(--pa-panel2);
+  border: 1px solid var(--pa-line);
+  font-size: 0.85rem;
+  margin: 0.25rem 0.35rem 0.25rem 0;
+}
+
+.ops-portal-admin .portal-preview-logo {
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  object-fit: cover;
+  border: 1px solid var(--pa-line);
+  background: var(--pa-panel2);
+}
+
+.ops-portal-admin .access-rules-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.ops-portal-admin .access-stat {
+  background: var(--pa-panel2);
+  border: 1px solid var(--pa-line);
+  border-radius: 10px;
+  padding: 0.85rem 0.75rem;
+  text-align: center;
+}
+
+.ops-portal-admin .access-stat-num {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--pa-gold);
+}
+
+.ops-portal-admin .access-stat-label {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--pa-dim);
+  margin-top: 0.25rem;
+}
+
+.ops-portal-admin .access-rules-cats,
+.ops-portal-admin .access-rules-note {
+  font-size: 0.85rem;
+  color: var(--pa-dim);
+  margin: 0 0 0.5rem;
+}
+
+.ops-portal-admin .portal-warn-box {
+  background: rgba(255, 120, 80, 0.12);
+  border: 1px solid rgba(255, 120, 80, 0.45);
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+  color: #ffb08a;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.ops-portal-admin .trusted-sites-admin { display: flex; flex-direction: column; gap: 1.25rem; }
+
+.ops-portal-admin .trusted-site-logo {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  object-fit: contain;
+  background: #fff;
+  padding: 2px;
+  vertical-align: middle;
+  margin-right: 0.35rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.ops-portal-admin .area-item .name {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.ops-portal-admin .trusted-site-domain {
+  color: var(--pa-dim);
+  font-size: 0.82em;
+}
+
+.ops-portal-admin .portal-field-hint {
+  margin: 0.25rem 0 0;
+  font-size: 0.78rem;
+  color: var(--pa-dim);
+  font-weight: 500;
+}
+
+.ops-portal-admin .trusted-cat-group {
+  background: var(--pa-panel2);
+  border: 1px solid var(--pa-line);
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+}
+
+.ops-portal-admin .trusted-cat-head {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--pa-gold);
+  margin: 0 0 0.65rem;
+}
+
+.ops-portal-admin .trusted-cat-count {
+  font-weight: 500;
+  color: var(--pa-dim);
+  font-size: 0.85rem;
+}
+
+.ops-portal-admin .portal-hero {
+  position: relative;
+  border-radius: var(--radius);
+  overflow: hidden;
+  min-height: 160px;
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--pa-line);
+  background: var(--pa-panel);
+}
+
+.ops-portal-admin .portal-hero img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block;
+}
+
+.ops-portal-admin .portal-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 30%, rgba(10, 12, 16, 0.92) 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1.25rem;
+}
+
+.ops-portal-admin .portal-hero h3 { font-size: 1.25rem; font-weight: 800; }
+.ops-portal-admin .portal-hero p { color: var(--pa-dim); margin-top: 0.25rem; }
+
+.ops-portal-admin .hidden { display: none !important; }
+
+.ops-portal-admin-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}

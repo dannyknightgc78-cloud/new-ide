@@ -1,0 +1,192 @@
+/**
+ * @license
+ * Copyright (c) 2026 Haven // Your Sanctuary. All rights reserved.
+ *
+ * NOTICE: All information contained herein is, and remains the property of
+ * Haven and its suppliers, if any. The intellectual and technical concepts
+ * contained herein are proprietary to Haven and its suppliers and may be
+ * covered by Spanish and international patents, patents in process, and are
+ * protected by trade secret or copyright law.
+ *
+ * Dissemination of this information or reproduction of this material is
+ * strictly forbidden unless prior written permission is obtained from Haven.
+ *
+ * Verification Token Hash: ED25519_CORE_SECURITY_ENFORCED
+ */
+
+/* ============================================================
+   Haven — child device experience (Visible Mentor, transparent)
+   Calm, friendly, unobtrusive. NOT covert, NOT surveillance-looking,
+   NOT alarm styling. The child always knows Haven is present.
+   ============================================================ */
+
+.child-body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+  overflow-x: hidden;
+  background:
+    radial-gradient(ellipse 70% 60% at 20% 0%, #eaf4ef, transparent 60%),
+    radial-gradient(ellipse 60% 60% at 100% 100%, #e9f0f6, transparent 55%),
+    var(--paper);
+  display: flex; flex-direction: column;
+}
+
+/* small, clear Haven presence badge — always visible */
+.child-topbar {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  padding: max(1rem, env(safe-area-inset-top, 0px)) max(1.4rem, env(safe-area-inset-right, 0px)) 1rem max(1.4rem, env(safe-area-inset-left, 0px));
+  max-width: 1000px; margin: 0 auto; width: 100%;
+}
+.haven-badge {
+  display: inline-flex; align-items: center; gap: .55rem; padding: .45rem .85rem;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 999px; box-shadow: var(--shadow-sm);
+  font-weight: 650; font-size: .86rem; color: var(--ink);
+}
+.haven-badge .shield { width: 20px; height: 20px; }
+.haven-badge .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--verified); }
+.haven-badge.paused .status-dot { background: var(--gold); }
+.child-clock { font-weight: 700; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+
+.child-main {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  padding: 1.5rem max(1.5rem, env(safe-area-inset-right, 0px)) max(1.5rem, env(safe-area-inset-bottom, 0px)) max(1.5rem, env(safe-area-inset-left, 0px));
+}
+.child-stage { width: 100%; max-width: 720px; }
+
+/* ---- normal (unlocked) launcher ------------------------- */
+.launcher { text-align: center; }
+.launcher .greeting { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 750; margin-bottom: .4rem; }
+.launcher .sub { color: var(--ink-soft); margin-bottom: 2rem; }
+.tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+@media (max-width: 560px) { .tiles { grid-template-columns: repeat(2, 1fr); } }
+.tile {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.3rem 1rem;
+  box-shadow: var(--shadow-sm); text-decoration: none; color: var(--ink); transition: transform .15s, box-shadow .2s;
+  display: flex; flex-direction: column; align-items: center; gap: .6rem;
+}
+.tile:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); text-decoration: none; }
+.tile .ti-emoji { font-size: 1.9rem; }
+.tile .ti-name { font-weight: 600; font-size: .9rem; }
+.tile .ti-cat { font-size: .72rem; color: var(--ink-soft); font-weight: 500; }
+.tile--site {
+  border: none; cursor: pointer; font: inherit; width: 100%;
+  background: var(--surface); border: 1px solid var(--line);
+}
+.tiles--portal { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+.child-empty-links {
+  grid-column: 1 / -1; text-align: center; color: var(--ink-soft);
+  font-size: .92rem; padding: 1rem; margin: 0;
+}
+.child-status-line {
+  text-align: center; font-size: .82rem; color: var(--ink-soft);
+  margin: 0 0 1rem; padding: .45rem .75rem;
+  background: var(--haven-soft); border-radius: 999px;
+  border: 1px solid rgba(31,122,92,.15);
+}
+.child-status-line--setup a { color: var(--haven); font-weight: 600; }
+html[data-haven-silent="1"] .haven-badge #badgeText { font-size: .8rem; }
+html[data-haven-silent="1"] .launcher .greeting { font-size: clamp(1.4rem, 3.5vw, 2rem); }
+html[data-haven-silent="1"] .launcher .sub { margin-bottom: 1.25rem; font-size: .88rem; }
+.install-wizard--silent .install-step--optional { opacity: .85; border-style: dashed; }
+.install-note--done { font-weight: 600; color: var(--haven-deep); }
+.child-body--parent-setup .child-main { align-items: flex-start; padding-top: .5rem; }
+.child-protect-banner {
+  background: var(--haven-soft); border: 1px solid rgba(31,122,92,.25);
+  border-radius: 14px; padding: 1rem 1.15rem; margin-bottom: 1rem; text-align: left;
+}
+.child-protect-banner h3 { margin: 0 0 .35rem; font-size: 1rem; }
+.child-protect-banner p { margin: 0 0 .75rem; font-size: .88rem; color: var(--ink-soft); line-height: 1.5; }
+.child-protect-actions { display: flex; flex-wrap: wrap; gap: .5rem; }
+.child-browse-hint { margin-top: 1.25rem; font-size: .82rem; color: var(--ink-soft); }
+.child-browse-toast {
+  position: fixed; left: 50%; bottom: max(1.25rem, env(safe-area-inset-bottom));
+  transform: translateX(-50%); z-index: 9999;
+  background: var(--ink); color: #fff; padding: .75rem 1.1rem; border-radius: 999px;
+  font-size: .88rem; font-weight: 600; box-shadow: var(--shadow-md); max-width: min(92vw, 420px);
+  text-align: center;
+}
+.child-browse-toast--block { background: #7a3030; }
+.child-browse-toast--warn { background: #8a6a1a; }
+
+/* ---- calm locked / awaiting state ----------------------- */
+.calm {
+  text-align: center; background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius-lg); padding: 3rem 2rem; box-shadow: var(--shadow-md);
+}
+.calm .calm-art { width: 110px; height: 110px; margin: 0 auto 1.5rem; }
+.calm h1 { font-size: clamp(1.5rem, 3.4vw, 2.1rem); margin-bottom: .75rem; color: var(--ink); }
+.calm p { color: var(--ink-soft); max-width: 42ch; margin: 0 auto; }
+.calm .calm-tag {
+  display: inline-flex; align-items: center; gap: .5rem; margin-top: 1.5rem; padding: .5rem 1rem;
+  background: var(--surface-2); border-radius: 999px; font-size: .85rem; color: var(--ink-soft);
+}
+
+/* ---- first-run setup (PWA / iOS Home Screen) ---------------- */
+.setup-card {
+  text-align: center; background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius-lg); padding: 2.5rem 1.75rem; box-shadow: var(--shadow-md);
+}
+.setup-card h1 { font-size: clamp(1.45rem, 3.2vw, 2rem); margin: 0 0 .65rem; }
+.setup-card p { color: var(--ink-soft); max-width: 40ch; margin: 0 auto 1.25rem; line-height: 1.6; }
+.setup-card .setup-actions { display: flex; flex-direction: column; gap: .75rem; max-width: 280px; margin: 0 auto; }
+.setup-card .btn-admin {
+  display: inline-block; margin-top: .5rem; font-size: .88rem; color: var(--ink-soft);
+}
+.setup-card .btn-admin a { color: var(--haven); font-weight: 600; }
+
+/* ---- iOS Add to Home Screen wizard (install=1 in Safari) -------- */
+.install-wizard { text-align: left; max-width: 520px; margin: 0 auto; }
+.install-wizard h1 { text-align: center; font-size: clamp(1.45rem, 3.2vw, 2rem); margin: 0 0 .5rem; }
+.install-wizard .install-lead { text-align: center; color: var(--ink-soft); margin: 0 0 1.25rem; line-height: 1.55; }
+.install-step {
+  display: flex; gap: 1rem; align-items: flex-start;
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: 14px; padding: 1rem 1.15rem; margin: .75rem 0;
+  box-shadow: var(--shadow-sm);
+}
+.install-step--hero { border-color: var(--haven); box-shadow: 0 0 0 1px rgba(31,122,92,.15); }
+.install-num {
+  flex: 0 0 2rem; height: 2rem; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; background: var(--haven-soft); color: var(--haven);
+}
+.install-body h3 { margin: 0 0 .25rem; font-size: 1rem; }
+.install-body p { margin: .15rem 0; font-size: .92rem; color: var(--ink-soft); line-height: 1.55; }
+.install-note {
+  margin-top: 1rem; padding: .85rem 1rem; border-radius: 12px;
+  background: var(--haven-soft); border: 1px solid rgba(31,122,92,.2);
+  font-size: .88rem; color: var(--ink-soft); text-align: center;
+}
+.child-body.install-mode .child-foot { display: none; }
+.calm .breathe { animation: breathe 5s ease-in-out infinite; }
+@keyframes breathe { 0%,100% { transform: scale(1); opacity: .9; } 50% { transform: scale(1.04); opacity: 1; } }
+
+/* ---- transparency note (always present) ----------------- */
+.child-foot { max-width: 720px; margin: 0 auto; width: 100%; padding: 1.5rem; }
+.transparency {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.1rem 1.3rem;
+  display: flex; gap: .9rem; align-items: flex-start;
+}
+.transparency .t-icon { width: 34px; height: 34px; flex: 0 0 auto; color: var(--haven); }
+.transparency h4 { font-size: .95rem; margin-bottom: .25rem; }
+.transparency p { font-size: .86rem; color: var(--ink-soft); }
+.transparency ul { list-style: none; display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .6rem; }
+.transparency li { font-size: .76rem; padding: .2rem .6rem; border-radius: 999px; background: var(--surface-2); color: var(--ink-soft); }
+.transparency li.no { color: var(--locked); background: var(--locked-soft); }
+.transparency li.yes { color: var(--haven-deep); background: var(--verified-soft); }
+
+@media (prefers-reduced-motion: reduce) { .breathe { animation: none !important; } }
+
+@media (max-width: 480px) {
+  .child-main { align-items: flex-start; padding-top: 1rem; }
+  .child-stage { max-width: 100%; }
+  .install-wizard { max-width: 100%; }
+  .install-step { padding: .9rem 1rem; gap: .85rem; }
+  .install-body h3 { font-size: 1.05rem; }
+  .install-body p { font-size: .95rem; }
+  .install-note { font-size: .92rem; line-height: 1.5; }
+  .setup-card { padding: 2rem 1.25rem; }
+  .child-foot { padding: 1rem max(1rem, env(safe-area-inset-right, 0px)) max(1rem, env(safe-area-inset-bottom, 0px)) max(1rem, env(safe-area-inset-left, 0px)); }
+  .transparency { flex-direction: column; }
+}

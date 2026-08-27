@@ -1,0 +1,260 @@
+<!--
+/**
+ * @license
+ * Copyright (c) 2026 Haven // Your Sanctuary. All rights reserved.
+ *
+ * NOTICE: All information contained herein is, and remains the property of
+ * Haven and its suppliers, if any. The intellectual and technical concepts
+ * contained herein are proprietary to Haven and its suppliers and may be
+ * covered by Spanish and international patents, patents in process, and are
+ * protected by trade secret or copyright law.
+ *
+ * Dissemination of this information or reproduction of this material is
+ * strictly forbidden unless prior written permission is obtained from Haven.
+ *
+ * Verification Token Hash: ED25519_CORE_SECURITY_ENFORCED
+ */
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta name="theme-color" content="#1f7a5c" />
+  <meta name="description" content="Haven on this device — silent Safari protection. Hardly noticeable once parent setup is done." />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Haven" />
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png" />
+  <title>Haven — your digital sanctuary</title>
+  <script src="assets/js/app-launch.js?v=2026071113"></script>
+  <script>
+  (function () {
+    var q = new URLSearchParams(location.search || "");
+    var isIosInstall = q.get("install") === "1" || q.get("source") === "ios-profile" || q.get("platform") === "ios";
+    var standalone = navigator.standalone === true;
+    try { standalone = standalone || window.matchMedia("(display-mode: standalone)").matches; } catch (_e) {}
+    /* Install wizard always wins — never bounce to ops because of stale parent role. */
+    if (isIosInstall || (standalone && !q.get("role") && q.get("view") !== "ops")) {
+      try {
+        localStorage.setItem("haven_app_role", "child");
+        var slot = q.get("device") || "1";
+        localStorage.setItem("haven_device_slot", slot);
+      } catch (_e0) {}
+    } else {
+      try {
+        var lastView = localStorage.getItem("haven_last_portal_view");
+        if (lastView && !q.get("source")) {
+          location.replace(lastView);
+          return;
+        }
+      } catch(e) {}
+    }
+    var lic = q.get("license") || q.get("license_token") || "";
+    if (lic) {
+      try {
+        localStorage.setItem("haven_license_token", lic);
+        sessionStorage.setItem("haven_license_token", lic);
+        if (!isIosInstall && !standalone) {
+          localStorage.setItem("haven_app_role", "parent");
+        }
+      } catch (_e) { /* ignore */ }
+    }
+    if (q.get("role") === "parent" || q.get("parent") === "1" || q.get("view") === "ops") {
+      try { localStorage.setItem("haven_app_role", "parent"); } catch (_e2) {}
+    }
+    if (q.get("role") === "child") {
+      try { localStorage.setItem("haven_app_role", "child"); } catch (_e3) {}
+    }
+    var isChildFlow = q.get("role") === "child" || q.get("device");
+    if (!isChildFlow && !isIosInstall && !standalone) {
+      var isParent = q.get("role") === "parent" || q.get("parent") === "1" || q.get("view") === "ops";
+      try {
+        if (!isParent) {
+          isParent = localStorage.getItem("haven_app_role") === "parent" || !!localStorage.getItem("haven_license_token");
+        }
+      } catch (_e4) {}
+      if (isParent) {
+        var dest = q.get("token") ? "admin.html" : "ops.html";
+        try {
+          if (!q.get("token") && (localStorage.getItem("haven.owner.passcodeOk") === "1" || sessionStorage.getItem("haven.owner.passcodeOk") === "1")) dest = "admin.html";
+        } catch (_e5) {}
+        var qs = q.toString();
+        location.replace(dest + (qs ? ("?" + qs) : ""));
+        return;
+      }
+    }
+    var install = q.get("install") === "1" || q.get("platform") === "ios" || q.get("source") === "ios-profile";
+    var nativeApp = q.get("native") === "1" || q.get("source") === "ios-app" || q.get("source") === "android-app";
+    var standalone = navigator.standalone === true;
+    try { standalone = standalone || window.matchMedia("(display-mode: standalone)").matches; } catch (_e) {}
+    var setupDone = false;
+    var silentMode = false;
+    try {
+      setupDone = !!localStorage.getItem("haven_pwa_setup_v1") || !!localStorage.getItem("haven_silent_setup_v1");
+      silentMode = !!localStorage.getItem("haven_silent_setup_v1");
+    } catch (_e2) {}
+    if (silentMode) document.documentElement.setAttribute("data-haven-silent", "1");
+    if (nativeApp) {
+      try { localStorage.setItem("haven_native_app", q.get("source") || "native"); } catch (_e3) {}
+    }
+    var mode = "app";
+    if (!setupDone && nativeApp) mode = "setup";
+    else if (!setupDone && standalone && !install) mode = "setup";
+    else if (!setupDone && install) mode = "install";
+    else if (setupDone) mode = "app";
+    document.documentElement.setAttribute("data-haven-mode", mode);
+  })();
+  </script>
+  <style>
+    .haven-panel { display: none; }
+    html[data-haven-mode="install"] #panel-install { display: block; }
+    html[data-haven-mode="setup"] #panel-setup { display: block; }
+    html[data-haven-mode="app"] #panel-app { display: block; }
+    html[data-haven-mode="install"] .child-foot,
+    html[data-haven-mode="setup"] .child-foot,
+    html[data-haven-silent="1"] .child-foot { display: none; }
+  </style>
+  <link rel="stylesheet" href="assets/css/haven.css?v=20260711" />
+  <link rel="stylesheet" href="assets/css/child.css?v=2026071213" />
+  <link rel="stylesheet" href="assets/css/assist.css?v=20260711" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 2 4 7v8c0 7 5 12 12 15 7-3 12-8 12-15V7z' fill='%231f7a5c'/%3E%3Cpath d='m11 16 3.5 3.5L22 12' stroke='white' stroke-width='2.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+</head>
+<body class="child-body">
+  <header class="child-topbar">
+    <span class="haven-badge" id="havenBadge">
+      <svg class="shield" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2 4 7v8c0 7 5 12 12 15 7-3 12-8 12-15V7z" fill="#1f7a5c"/><path d="m11 16 3.5 3.5L22 12" stroke="#fff" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="status-dot" id="badgeDot"></span>
+      <span id="badgeText">Haven</span>
+    </span>
+    <span class="child-clock" id="clock">—</span>
+  </header>
+
+  <main class="child-main">
+    <div class="child-stage" id="stage">
+      <!-- INSTALL: parent one-time Safari setup (first visit only) -->
+      <div id="panel-install" class="haven-panel install-wizard">
+        <h1>Silent protection for Safari</h1>
+        <p class="install-lead"><strong>Hardly noticeable.</strong> Parent installs once — kid uses normal Safari. Haven blocks ads and popups in the background.</p>
+        <div class="install-step">
+          <div class="install-num">1</div>
+          <div class="install-body">
+            <h3>Install content filter</h3>
+            <p>Tap <a href="downloads/haven-content-filter.mobileconfig?v=2026071213"><strong>Install DNS filter</strong></a> → Settings → Allow. Works silently in Safari.</p>
+          </div>
+        </div>
+        <div class="install-step">
+          <div class="install-num">2</div>
+          <div class="install-body">
+            <h3>Enable Safari content blocker</h3>
+            <p>Settings → Safari → Extensions → <strong>Haven</strong>. No toolbar UI — just blocks ads and adult domains.</p>
+          </div>
+        </div>
+        <div class="install-step install-step--optional">
+          <div class="install-num">3</div>
+          <div class="install-body">
+            <h3>Optional — portal tiles</h3>
+            <p>Share → Add to Home Screen only if you want Admin-approved site shortcuts. Otherwise skip — Safari is enough.</p>
+          </div>
+        </div>
+        <p class="install-note">Once installed, Haven works silently — <strong>no app to open</strong>.</p>
+        <p class="install-note">Full guide: <a href="ios-install.html">haven.dannygc.cloud/ios</a> · Admin: <a href="ops.html">Portal Admin</a></p>
+        <p class="install-note install-license-note" id="installLicenseNote" hidden><strong>License saved.</strong> Device <strong>1</strong> registers when you confirm.</p>
+      </div>
+
+      <!-- SETUP: first open from Home Screen icon -->
+      <div id="panel-setup" class="haven-panel">
+        <div class="setup-card">
+          <svg viewBox="0 0 32 32" aria-hidden="true" style="width:64px;height:64px;margin:0 auto 1rem;display:block"><path d="M16 2 4 7v8c0 7 5 12 12 15 7-3 12-8 12-15V7z" fill="#1f7a5c"/><path d="m11 16 3.5 3.5L22 12" stroke="#fff" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <h1>Welcome to Haven</h1>
+          <p id="setupLead">You're in the app. Tap below to finish setup and open your sanctuary.</p>
+          <div class="setup-actions">
+            <button type="button" class="btn btn-primary" id="confirmSetupBtn">Confirm setup</button>
+          </div>
+          <p class="btn-admin">Admin? <a href="ops.html">Open Portal Admin</a></p>
+        </div>
+      </div>
+
+      <!-- APP: minimal portal launcher (post-setup) -->
+      <div id="panel-app" class="haven-panel">
+        <p class="child-status-line" id="silentStatus" hidden>Haven is protecting Safari.</p>
+        <div class="launcher" id="appLauncher">
+          <div class="greeting" id="greeting">Your sites</div>
+          <p class="sub" id="launcherSub">Tap an Admin-approved site — opens in normal Safari with blocking on.</p>
+          <div class="tiles tiles--portal" id="tileGrid">
+            <p class="child-empty-links">Loading your allowed sites…</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="child-foot">
+    <div class="transparency">
+      <svg class="t-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><path d="m9 12 2 2 4-4"/></svg>
+      <div>
+        <h4>Haven is here, and it's honest with you.</h4>
+        <p>Haven verifies system health — it does <b>not</b> read your messages or browsing.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+  (function () {
+    var clock = document.getElementById("clock");
+    function tick() {
+      if (clock) clock.textContent = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    }
+    tick(); setInterval(tick, 1000);
+
+    var btn = document.getElementById("confirmSetupBtn");
+    var q = new URLSearchParams(location.search || "");
+    var nativeApp = q.get("native") === "1" || q.get("source") === "ios-app" || q.get("source") === "android-app";
+    var lead = document.getElementById("setupLead");
+    if (lead && nativeApp) {
+      lead.textContent = "Haven is ready on this device. Tap Confirm to open your sanctuary.";
+    }
+    function finishSetup() {
+      try {
+        localStorage.setItem("haven_pwa_setup_v1", new Date().toISOString());
+        localStorage.setItem("haven_app_role", "child");
+      } catch (_e) {}
+      if (window.HavenChildEnroll) window.HavenChildEnroll();
+      document.documentElement.setAttribute("data-haven-mode", "app");
+      var badge = document.getElementById("badgeText");
+      if (badge) badge.textContent = "Protected";
+      var silent = document.getElementById("silentStatus");
+      if (silent) silent.hidden = false;
+      if (window.HavenChildBoot) window.HavenChildBoot();
+    }
+    if (btn) {
+      btn.addEventListener("click", finishSetup);
+    }
+    if (nativeApp && document.documentElement.getAttribute("data-haven-mode") === "setup") {
+      if (lead) lead.textContent = "Haven is opening your sanctuary…";
+      setTimeout(finishSetup, 400);
+    }
+    var licNote = document.getElementById("installLicenseNote");
+    if (licNote) {
+      try {
+        if (localStorage.getItem("haven_license_token") || q.get("license") || q.get("license_token")) {
+          licNote.hidden = false;
+        }
+      } catch (_e) {}
+    }
+  })();
+  </script>
+  <script src="assets/js/license-gate.js?v=20260712"></script>
+  <script src="assets/js/config.js?v=2026071113"></script>
+  <script src="assets/js/haven.js?v=2026071213"></script>
+  <script src="assets/js/child-portal.js?v=2026071213"></script>
+  <script src="assets/js/child.js?v=2026071213"></script>
+  <script src="assets/js/faqs.js?v=20260711"></script>
+  <script src="assets/js/assist.js?v=20260711"></script>
+  <footer class="site-footer"><div class="site-footer-inner"><span>© <span id="year"></span> Haven // Your Sanctuary</span></div></footer>
+  <script>document.getElementById("year")&&(document.getElementById("year").textContent=new Date().getFullYear());</script>
+</body>
+</html>

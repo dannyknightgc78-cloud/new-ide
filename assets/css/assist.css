@@ -1,0 +1,299 @@
+/**
+ * @license
+ * Copyright (c) 2026 Haven // Your Sanctuary. All rights reserved.
+ *
+ * NOTICE: All information contained herein is, and remains the property of
+ * Haven and its suppliers, if any. The intellectual and technical concepts
+ * contained herein are proprietary to Haven and its suppliers and may be
+ * covered by Spanish and international patents, patents in process, and are
+ * protected by trade secret or copyright law.
+ *
+ * Dissemination of this information or reproduction of this material is
+ * strictly forbidden unless prior written permission is obtained from Haven.
+ *
+ * Verification Token Hash: ED25519_CORE_SECURITY_ENFORCED
+ */
+
+/* ============================================================
+   Haven — AI setup assistant widget styles.
+   Floating launcher + chat panel. Brand-consistent with haven.css tokens.
+   Portable across Chrome, Edge, Firefox, and Safari (incl. iOS): uses flexbox,
+   safe-area insets, and vendor-prefixed transforms where helpful.
+   ============================================================ */
+
+.assist-launcher {
+  position: fixed;
+  right: 1.25rem;
+  bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
+  z-index: 1000;
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+  padding: .78rem 1.25rem;
+  border: 2px solid rgba(255, 255, 255, .22);
+  border-radius: 999px;
+  background: var(--haven);
+  color: #fff;
+  font-family: var(--font-sans);
+  font-size: .94rem;
+  font-weight: 700;
+  letter-spacing: .01em;
+  box-shadow: 0 0 0 4px var(--haven-glow), var(--shadow-lg);
+  -webkit-transition: -webkit-transform .15s ease, background .15s ease, box-shadow .15s ease;
+  transition: transform .15s ease, background .15s ease, box-shadow .15s ease;
+  animation: assist-pulse 3s ease-in-out infinite;
+}
+.assist-launcher:hover {
+  background: var(--haven-deep);
+  -webkit-transform: translateY(-2px);
+  transform: translateY(-2px);
+  box-shadow: 0 0 0 6px var(--haven-glow), 0 20px 40px rgba(17, 34, 51, .18);
+  animation: none;
+}
+@keyframes assist-pulse {
+  0%, 100% { box-shadow: 0 0 0 4px var(--haven-glow), var(--shadow-lg); }
+  50% { box-shadow: 0 0 0 8px rgba(31, 122, 92, .12), var(--shadow-lg); }
+}
+.assist-launcher svg { width: 20px; height: 20px; display: block; }
+.assist-launcher-label { line-height: 1; }
+
+.assist-panel {
+  position: fixed;
+  right: 1.25rem;
+  bottom: calc(5rem + env(safe-area-inset-bottom, 0px));
+  z-index: 1001;
+  width: min(380px, calc(100vw - 2rem));
+  height: min(560px, calc(100vh - 7rem));
+  max-height: min(560px, calc(100vh - 7rem));
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+.assist-panel[hidden] { display: none; }
+
+.assist-head {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .9rem 1rem;
+  background: linear-gradient(90deg, var(--haven-soft) 0%, transparent 85%);
+  border-bottom: 1px solid var(--line);
+  border-top: 3px solid var(--haven);
+}
+.assist-title {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  gap: .5rem;
+  font-weight: 700;
+  color: var(--ink);
+  font-size: .98rem;
+}
+.assist-title svg { width: 22px; height: 22px; display: block; }
+.assist-close {
+  border: none;
+  background: transparent;
+  color: var(--ink-faint);
+  font-size: 1.4rem;
+  line-height: 1;
+  padding: .1rem .4rem;
+  border-radius: 8px;
+}
+.assist-close:hover { color: var(--ink); background: var(--surface-2); }
+
+.assist-log {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1 1 0;
+  flex: 1 1 0;
+  min-height: 8rem;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 1rem;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  gap: .65rem;
+}
+
+.assist-msg { display: -webkit-flex; display: flex; }
+.assist-msg-user { -webkit-justify-content: flex-end; justify-content: flex-end; }
+.assist-msg-bot { -webkit-justify-content: flex-start; justify-content: flex-start; }
+.assist-bubble {
+  max-width: 86%;
+  padding: .6rem .8rem;
+  border-radius: 14px;
+  font-size: .9rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+  opacity: 1;
+  visibility: visible;
+}
+.assist-msg-bot .assist-bubble { background: var(--surface-2); color: var(--ink); border-bottom-left-radius: 4px; }
+.assist-msg-user .assist-bubble { background: var(--haven); color: #fff; border-bottom-right-radius: 4px; }
+.assist-bubble-muted { color: var(--ink-faint); font-style: italic; }
+.assist-bubble a { color: var(--haven); font-weight: 600; text-decoration: underline; }
+.assist-bubble a:hover { color: var(--haven-dark, #165a44); }
+
+.assist-form {
+  display: -webkit-flex;
+  display: flex;
+  gap: .5rem;
+  padding: .75rem;
+  border-top: 1px solid var(--line);
+  background: var(--surface);
+}
+.assist-input {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1 1 auto;
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: .6rem .8rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  font-family: var(--font-sans);
+  font-size: .92rem;
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-appearance: none;
+  appearance: none;
+}
+.assist-input:focus { outline: none; border-color: var(--haven); box-shadow: 0 0 0 3px var(--haven-glow); }
+.assist-send {
+  -webkit-flex: 0 0 auto;
+  flex: 0 0 auto;
+  display: -webkit-inline-flex;
+  display: inline-flex;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  width: 42px;
+  border: none;
+  border-radius: 999px;
+  background: var(--haven);
+  color: #fff;
+}
+.assist-send:hover { background: var(--haven-deep); }
+.assist-send svg { width: 18px; height: 18px; display: block; }
+
+.assist-foot {
+  margin: 0;
+  padding: 0 1rem .75rem;
+  font-size: .72rem;
+  color: var(--ink-faint);
+  text-align: center;
+}
+
+@media (max-width: 480px) {
+  .assist-panel {
+    right: .75rem;
+    left: .75rem;
+    width: auto;
+    bottom: calc(4.75rem + env(safe-area-inset-bottom, 0px));
+  }
+  .assist-launcher-label { display: none; }
+  .assist-launcher { padding: .8rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .assist-launcher { -webkit-transition: none; transition: none; animation: none; }
+}
+
+/* FAQ question form styles */
+.faq-ask-section {
+  max-width: 600px;
+  margin: 3rem auto 0;
+  padding: 2rem;
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+}
+
+.faq-ask-section h3 {
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+  color: var(--ink);
+}
+
+.faq-ask-section .muted {
+  margin-bottom: 1.5rem;
+  color: var(--ink-soft);
+}
+
+.faq-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.faq-form .field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.faq-form label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.faq-form input,
+.faq-form textarea {
+  padding: 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 0.95rem;
+  background: var(--bg);
+  color: var(--ink);
+  transition: border-color 0.2s;
+}
+
+.faq-form input:focus,
+.faq-form textarea:focus {
+  outline: none;
+  border-color: var(--haven);
+}
+
+.faq-form button {
+  align-self: flex-start;
+  margin-top: 0.5rem;
+}
+
+.toast {
+  display: none;
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.toast-ok {
+  background: var(--verified-soft);
+  color: var(--haven);
+  border: 1px solid var(--haven);
+}
+
+.toast-error {
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #dc2626;
+}

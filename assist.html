@@ -1,0 +1,82 @@
+<!--
+/**
+ * @license
+ * Copyright (c) 2026 Haven // Your Sanctuary. All rights reserved.
+ *
+ * NOTICE: All information contained herein is, and remains the property of
+ * Haven and its suppliers, if any. The intellectual and technical concepts
+ * contained herein are proprietary to Haven and its suppliers and may be
+ * covered by Spanish and international patents, patents in process, and are
+ * protected by trade secret or copyright law.
+ *
+ * Dissemination of this information or reproduction of this material is
+ * strictly forbidden unless prior written permission is obtained from Haven.
+ *
+ * Verification Token Hash: ED25519_CORE_SECURITY_ENFORCED
+ */
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#1f7a5c" />
+  <meta name="description" content="Ask Haven — FAQ assistant with privacy-first answers about setup, plans, and family protection." />
+  <title>Haven — Ask Haven Assistant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/haven.css?v=20260711" />
+  <link rel="stylesheet" href="assets/css/landing.css?v=20260711" />
+  <link rel="stylesheet" href="assets/css/assist.css?v=20260711" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 2 4 7v8c0 7 5 12 12 15 7-3 12-8 12-15V7z' fill='%231f7a5c'/%3E%3Cpath d='m11 16 3.5 3.5L22 12' stroke='white' stroke-width='2.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a class="brand" href="index.html" aria-label="Haven home">
+        <svg class="shield" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2 4 7v8c0 7 5 12 12 15 7-3 12-8 12-15V7z" fill="#1f7a5c"/><path d="m11 16 3.5 3.5L22 12" stroke="#fff" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span class="brand-name"><b>Haven</b></span>
+      </a>
+      <nav class="site-nav" aria-label="Primary">
+        <a class="navlink" href="index.html">Home</a>
+        <a class="navlink" href="pricing.html">Plans</a>
+        <a class="navlink" href="setup.html">Setup</a>
+        <a class="navlink" href="downloads.html">Downloads</a>
+        <a class="navlink" href="faq.html">FAQ</a>
+        <a class="navlink" href="assist.html" aria-current="page">Ask Haven</a>
+        <a class="navlink" href="ops.html">Portal Admin</a>
+      </nav>
+      <div class="header-cta">
+        <a class="btn btn-ghost btn-sm" href="ops.html">Portal Admin</a>
+        <a class="btn btn-primary btn-sm" href="downloads.html">Download free</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="section page-hero">
+      <div class="container">
+        <div class="center" style="max-width:720px;margin:0 auto">
+          <span class="eyebrow">Haven Assistant</span>
+          <h1>Ask Haven anything about setup, plans, or privacy.</h1>
+          <p class="lead mt-2">The assistant opens automatically. Answers come from our FAQ first; harder questions may use our local AI — we never read your child's messages.</p>
+          <p class="mt-2"><a class="btn btn-ghost" href="contact.html">Contact a human instead</a></p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-note"><span>© <span id="year"></span> Haven — your digital sanctuary</span></div>
+    </div>
+  </footer>
+
+  <script src="assets/js/config.js?v=20260711"></script>
+  <script src="assets/js/haven.js?v=20260711"></script>
+  <script src="assets/js/faqs.js?v=20260711"></script>
+  <script src="assets/js/assist.js?v=20260711"></script>
+  <script>document.getElementById("year")&&(document.getElementById("year").textContent=new Date().getFullYear());</script>
+</body>
+</html>

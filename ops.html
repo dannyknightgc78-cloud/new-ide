@@ -1,0 +1,488 @@
+<!--
+/**
+ * @license
+ * Copyright (c) 2026 Haven // Your Sanctuary. All rights reserved.
+ *
+ * NOTICE: All information contained herein is, and remains the property of
+ * Haven and its suppliers, if any. The intellectual and technical concepts
+ * contained herein are proprietary to Haven and its suppliers and may be
+ * covered by Spanish and international patents, patents in process, and are
+ * protected by trade secret or copyright law.
+ *
+ * Dissemination of this information or reproduction of this material is
+ * strictly forbidden unless prior written permission is obtained from Haven.
+ *
+ * Verification Token Hash: ED25519_CORE_SECURITY_ENFORCED
+ */
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta name="theme-color" content="#1f7a5c" />
+  <meta name="description" content="Haven Portal Admin — an elegant Integrity Dashboard. View the Chain of Trust, issue signed commands, and protect your family with cryptographic proof." />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Haven" />
+  <link rel="apple-touch-icon" href="assets/icons/haven-icon.svg" />
+  <title>Portal Admin — Haven Integrity Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/haven.css?v=2026071020" />
+  <link rel="stylesheet" href="assets/css/ops.css?v=2026071020" />
+  <link rel="stylesheet" href="assets/css/ops-auth.css?v=2026071020" />
+  <link rel="stylesheet" href="assets/css/assist.css?v=20260711" />
+  <link rel="stylesheet" href="assets/css/ops-portal-admin.css?v=2026071219" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 2 4 7v8c0 7 5 12 12 15 7-3 12-8 12-15V7z' fill='%231f7a5c'/%3E%3Cpath d='m11 16 3.5 3.5L22 12' stroke='white' stroke-width='2.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a class="brand" href="index.html" aria-label="Haven home">
+        <svg class="shield" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2 4 7v8c0 7 5 12 12 15 7-3 12-8 12-15V7z" fill="#1f7a5c"/><path d="m11 16 3.5 3.5L22 12" stroke="#fff" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span class="brand-name"><b>Haven</b></span>
+      </a>
+      <nav class="site-nav" aria-label="Primary">
+        <a class="navlink" href="index.html">Home</a>
+        <a class="navlink" href="pricing.html">Plans</a>
+        <a class="navlink" href="setup.html">Setup</a>
+        <a class="navlink" href="downloads.html">Downloads</a>
+        <a class="navlink" href="faq.html">FAQ</a>
+        <a class="navlink" href="assist.html">Ask Haven</a>
+        <a class="navlink" href="ops.html" aria-current="page">Portal Admin</a>
+        <a class="navlink" href="child.html">My Portal</a>
+      </nav>
+      <div class="header-cta">
+        <span class="pill pill-green"><span class="dot dot-live"></span> Sidecar online</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="ops-shell">
+    <div class="container">
+      <div class="ops-head">
+        <div>
+          <h1>Portal Admin</h1>
+          <p class="sub">Your family's Integrity Dashboard — cryptographic proof that protection is working.</p>
+        </div>
+        <div class="row" style="gap:.75rem">
+          <div>
+            <span class="ph-sub" style="display:block;margin-bottom:.3rem;text-align:right">My Portal mode</span>
+            <div class="mode-toggle" id="modeToggle" role="group" aria-label="My Portal mode (both modes are openly visible in My Portal)">
+              <button data-mode="visible" class="active">Visible Mentor</button>
+              <button data-mode="minimal">Minimal</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mock-banner" id="mockBanner">
+        <span aria-hidden="true">●</span>
+        <span>Connecting to the Haven sidecar…</span>
+      </div>
+
+      <!-- device selector -->
+      <div class="device-bar" id="deviceBar" role="tablist" aria-label="Select device"></div>
+
+      <!-- lock / protected status -->
+      <div class="status-banner" id="statusBanner" aria-live="polite"></div>
+
+      <!-- metric cards -->
+      <div class="metrics" id="metrics"></div>
+
+      <div class="ops-grid">
+        <!-- LEFT: Chain of Trust -->
+        <section class="panel" aria-labelledby="cotTitle">
+          <div class="panel-head">
+            <div>
+              <h3 id="cotTitle">Chain of Trust</h3>
+              <span class="ph-sub">Append-only integrity ledger · Ed25519-sealed · click any block</span>
+            </div>
+            <span class="pill pill-green"><span class="check" style="width:16px;height:16px"><svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg></span> Verify: PASS</span>
+          </div>
+          <div class="panel-body scroll">
+            <div class="chain" id="chain"></div>
+          </div>
+          <div class="chain-foot">
+            <span>Chain head: <span id="chainHead">—</span></span>
+            <span><span id="chainCount">0</span> blocks · genesis 0000…0000</span>
+          </div>
+        </section>
+
+        <!-- RIGHT column -->
+        <div class="stack" style="gap:1.5rem">
+          <!-- Emergency kill switch -->
+          <section class="panel killbox" aria-labelledby="killTitle">
+            <div class="panel-head">
+              <div>
+                <h3 id="killTitle">Emergency Internet Lock</h3>
+                <span class="ph-sub">High-priority signed command</span>
+              </div>
+              <span class="pill pill-locked" id="killState">Unlocked</span>
+            </div>
+            <div class="panel-body">
+              <p class="kill-desc">Instantly lock <b id="killChild">this device's</b> internet access. Issued as a high-priority Ed25519-signed command and notarized to the Chain of Trust. My Portal shows a calm "you're offline for now" screen — never an error.</p>
+              <button class="hold-btn" id="holdBtn" aria-label="Press and hold to lock internet">
+                <span class="hold-fill" id="holdFill"></span>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 9V7a5 5 0 0 0-10 0v2H5v12h14V9zM9 7a3 3 0 0 1 6 0v2H9z"/></svg>
+                <span id="holdLabel">Press &amp; hold to Lock Internet</span>
+              </button>
+              <p class="hold-hint" id="holdHint">Hold for 1.2s to confirm — guards against accidental taps.</p>
+              <button class="btn btn-ghost unlock-btn hidden" id="unlockBtn">Issue signed Unlock command</button>
+              <div class="sign-toast" id="killToast" aria-live="polite"></div>
+            </div>
+          </section>
+
+          <!-- Signed Command Center -->
+          <section class="panel" aria-labelledby="cmdTitle">
+            <div class="panel-head">
+              <div>
+                <h3 id="cmdTitle">Signed Command Center</h3>
+                <span class="ph-sub">Every command is signed locally by the sidecar</span>
+              </div>
+            </div>
+            <div class="panel-body">
+              <label class="fld" for="cmdSelect">Choose a command</label>
+              <div class="cmd-row">
+                <select class="input" id="cmdSelect">
+                  <option value="Adjust bedtime to 9:30 PM">Adjust bedtime to 9:30 PM</option>
+                  <option value="Extend screen time 30m">Extend screen time 30m</option>
+                  <option value="Enable focus mode (homework)">Enable focus mode (homework)</option>
+                  <option value="Approve educational app request">Approve educational app request</option>
+                  <option value="Schedule device wind-down 8:45 PM">Schedule device wind-down 8:45 PM</option>
+                </select>
+                <button class="btn btn-primary" id="cmdSend">Sign &amp; Send</button>
+              </div>
+              <div class="quick-cmds" id="quickCmds">
+                <button data-cmd="Extend reading time 15m">+15m reading</button>
+                <button data-cmd="Approve homework site">Approve homework site</button>
+                <button data-cmd="Pause games until 4 PM">Pause games</button>
+              </div>
+              <div class="sign-toast" id="cmdToast" aria-live="polite"></div>
+            </div>
+          </section>
+
+          <!-- System Drift / Anomaly feed -->
+          <section class="panel" aria-labelledby="driftTitle">
+            <div class="panel-head">
+              <div>
+                <h3 id="driftTitle">System Drift &amp; Anomalies</h3>
+                <span class="ph-sub">Mostly quiet by design — alerts only on tamper</span>
+              </div>
+              <button class="icon-btn" id="simDrift">Simulate drift event</button>
+            </div>
+            <div class="panel-body" id="driftBody"></div>
+          </section>
+        </div>
+      </div>
+
+      <!-- My Haven portal org settings (consolidated — was /portal/admin.html) -->
+      <section id="portalAdmin" class="ops-portal-admin" aria-labelledby="portalAdminTitle">
+        <div class="ops-portal-admin-head">
+          <div>
+            <h2 id="portalAdminTitle">My Haven Portal</h2>
+            <p class="sub">Branding, trusted sites, URL approvals, scrapbook moderation, and team invites for the kid-facing portal at <a href="portal/">/portal/</a>.</p>
+          </div>
+          <div class="ops-portal-admin-toolbar">
+            <a class="btn btn-ghost btn-sm" href="portal/">Open kid portal</a>
+            <button class="btn btn-ghost btn-sm hidden" id="portalAdminSignOutBtn" type="button">Sign out org</button>
+          </div>
+        </div>
+
+        <div id="portalAdminAuthGate" class="portal-auth">
+          <h3>Org Admin Sign-in</h3>
+          <p class="sub">Use your Haven license key and checkout email to manage your family portal.</p>
+          <form id="portalAdminAuthForm">
+            <div class="portal-field">
+              <label for="portalAdminEmailInput">Email</label>
+              <input id="portalAdminEmailInput" type="email" required autocomplete="email" placeholder="you@family.com" />
+            </div>
+            <div class="portal-field">
+              <label for="portalAdminLicenseInput">License token</label>
+              <input id="portalAdminLicenseInput" type="text" required placeholder="ABXLIC1.…" />
+            </div>
+            <button class="portal-btn primary" type="submit">Sign in</button>
+            <div id="portalAdminAuthStatus" class="portal-status hidden"></div>
+          </form>
+        </div>
+
+        <div id="portalAdminApp" class="hidden">
+          <div id="heroPreview" class="portal-hero"></div>
+          <p id="roleBadge" style="color:var(--pa-dim);font-size:.85rem;margin-bottom:1.5rem"></p>
+
+          <section class="portal-card">
+            <h2>Look &amp; Feel</h2>
+            <p style="color:var(--pa-dim);font-size:.9rem;margin-bottom:1rem">Calm themes and photo backgrounds for the kid-facing portal.</p>
+            <div class="portal-grid">
+              <div class="portal-field">
+                <label for="portalTheme">Default theme</label>
+                <select id="portalTheme">
+                  <option value="aurora-sanctuary">Aurora Sanctuary (live animations)</option>
+                  <option value="sanctuary">Digital Sanctuary (circular glass)</option>
+                  <option value="soft-ocean">Soft Ocean</option>
+                  <option value="digital-sanctuary">Grid Sanctuary (3×3 cards)</option>
+                  <option value="circular-glass">Circular Glass (legacy alias)</option>
+                  <option value="morning-mist">Morning Mist</option>
+                  <option value="lavender-calm">Lavender Calm</option>
+                  <option value="sunny-meadow">Sunny Meadow</option>
+                  <option value="cloud-nine">Cloud Nine</option>
+                  <option value="cozy-cabin">Cozy Cabin</option>
+                  <option value="sunset-glow">Sunset Glow</option>
+                  <option value="aurora-dream">Aurora Dream</option>
+                  <option value="playground-fun">Playground Fun</option>
+                </select>
+              </div>
+              <div class="portal-field">
+                <label for="backgroundStyle">Background style</label>
+                <select id="backgroundStyle">
+                  <option value="theme">Theme gradient (default)</option>
+                  <option value="gradient">Soft gradient only</option>
+                  <option value="photo">Full-page photo</option>
+                </select>
+              </div>
+              <div class="portal-field">
+                <label for="backgroundUrl">Full-page background photo URL</label>
+                <input id="backgroundUrl" type="url" placeholder="https://…/background.jpg" />
+              </div>
+              <div class="portal-field">
+                <label for="allowBackgroundGallery">Kids can pick backgrounds</label>
+                <select id="allowBackgroundGallery">
+                  <option value="1">Yes — approved gallery only</option>
+                  <option value="0">No — org default only</option>
+                </select>
+              </div>
+              <div class="portal-field">
+                <label for="scrapbookEnabled">My Scrapbook</label>
+                <select id="scrapbookEnabled">
+                  <option value="1">Enabled — creative board for everyone</option>
+                  <option value="0">Disabled</option>
+                </select>
+              </div>
+              <div class="portal-field">
+                <label for="scrapbookModeration">Scrapbook moderation</label>
+                <select id="scrapbookModeration">
+                  <option value="0">Off — private per user</option>
+                  <option value="1">On — admins can view all scrapbooks</option>
+                </select>
+              </div>
+            </div>
+            <div class="portal-field" style="margin-top:1rem">
+              <label for="adultFilterEnabled">Adult content filter</label>
+              <select id="adultFilterEnabled">
+                <option value="1">On (recommended)</option>
+                <option value="0">Off</option>
+              </select>
+            </div>
+            <div class="portal-field" style="margin-top:1rem;padding:1rem;background:var(--pa-panel2);border-radius:8px;border:1px solid var(--pa-line)">
+              <label for="adultFilterOverride" style="color:var(--pa-err)">⚠️ Override adult filter (less safe)</label>
+              <select id="adultFilterOverride">
+                <option value="0">Keep filter on</option>
+                <option value="1">Override — allow adult sites</option>
+              </select>
+              <div class="portal-field" style="margin-top:.75rem;margin-bottom:0">
+                <label for="overrideWarningText">Required warning shown to users when override is active</label>
+                <textarea id="overrideWarningText" placeholder="e.g. Adult filter paused for supervised browsing — grown-up nearby."></textarea>
+              </div>
+            </div>
+            <button class="portal-btn primary" id="savePortalSettingsBtn" type="button">Save look &amp; feel</button>
+            <div id="portalSettingsStatus" class="portal-status hidden"></div>
+          </section>
+
+          <section class="portal-card">
+            <h2>Branding &amp; Photos</h2>
+            <div class="portal-grid">
+              <div class="portal-field">
+                <label for="logoUrl">Logo image URL</label>
+                <input id="logoUrl" type="url" placeholder="https://…/logo.png" />
+              </div>
+              <div class="portal-field">
+                <label for="heroUrl">Hero photo URL (welcome banner)</label>
+                <input id="heroUrl" type="url" placeholder="https://…/hero.jpg" />
+              </div>
+              <div class="portal-field">
+                <label for="primaryColor">Accent colour</label>
+                <input id="primaryColor" type="color" value="#c98a36" />
+              </div>
+              <div class="portal-field">
+                <label>Logo preview</label>
+                <img id="logoPreview" class="portal-preview-logo hidden" alt="Logo preview" />
+              </div>
+            </div>
+            <div class="portal-field">
+              <label for="welcomeText">Welcome message</label>
+              <textarea id="welcomeText" placeholder="Welcome back — your safe space for calm browsing."></textarea>
+            </div>
+            <button class="portal-btn primary" id="saveBrandBtn" type="button">Save branding</button>
+            <div id="brandStatus" class="portal-status hidden"></div>
+          </section>
+
+          <section class="portal-card" id="accessRulesCard">
+            <h2>Allowed URLs &amp; Access Rules</h2>
+            <p style="color:var(--pa-dim);font-size:.9rem;margin-bottom:1rem">Kids can only open URLs you enable below or approve from pending requests.</p>
+            <div id="accessRulesSummary" class="access-rules-summary"></div>
+            <div id="overrideActiveWarn" class="portal-warn-box hidden" role="alert"></div>
+            <h3 style="font-size:1rem;margin:1.25rem 0 .75rem">Trusted areas</h3>
+            <ul id="accessAreaList" class="area-list"></ul>
+          </section>
+
+          <section class="portal-card" id="trustedSitesCard">
+            <h2>Trusted / Main Sites</h2>
+            <p style="color:var(--pa-dim);font-size:.9rem;margin-bottom:1rem">Toggle which trusted sites appear in each category on the kid portal.</p>
+            <div id="trustedSitesList" class="trusted-sites-admin"></div>
+            <h3 style="font-size:1rem;margin:1.5rem 0 .75rem">Add custom site</h3>
+            <div class="portal-grid">
+              <div class="portal-field">
+                <label for="linkCategory">Category</label>
+                <select id="linkCategory">
+                  <option value="socials">Socials</option>
+                  <option value="email">Email</option>
+                  <option value="music_video">Music &amp; Video</option>
+                  <option value="learning">Learning</option>
+                  <option value="travel">Travel</option>
+                  <option value="homework">Homework / Study Tools</option>
+                  <option value="storage">My Stuff (Storage)</option>
+                  <option value="tools">Tools</option>
+                  <option value="creativity">Creativity</option>
+                  <option value="space">My Spaces (custom)</option>
+                </select>
+              </div>
+              <div class="portal-field">
+                <label for="linkName">Name</label>
+                <input id="linkName" placeholder="Site name" />
+              </div>
+              <div class="portal-field">
+                <label for="linkUrl">URL</label>
+                <input id="linkUrl" type="url" placeholder="https://…" />
+              </div>
+              <div class="portal-field">
+                <label for="linkIcon">Icon override (optional emoji)</label>
+                <input id="linkIcon" placeholder="Auto from URL" maxlength="4" />
+                <p class="portal-field-hint">Logo is picked from the site URL automatically.</p>
+              </div>
+            </div>
+            <button class="portal-btn primary" id="addLinkBtn" type="button">Add site</button>
+            <div id="linkStatus" class="portal-status hidden"></div>
+          </section>
+
+          <section class="portal-card">
+            <h2>Pending URL Requests</h2>
+            <p style="color:var(--pa-dim);font-size:.9rem;margin-bottom:1rem">Kids can request new sites — approve to add them to My Spaces, or reject.</p>
+            <ul id="requestList" class="area-list"></ul>
+            <div id="requestStatus" class="portal-status hidden"></div>
+          </section>
+
+          <section class="portal-card">
+            <h2>Trusted Areas</h2>
+            <p style="color:var(--pa-dim);font-size:.9rem;margin-bottom:1rem">Define safe zones — home, school, grandparents.</p>
+            <ul id="areaList" class="area-list"></ul>
+            <div class="portal-grid" style="margin-top:1.25rem">
+              <div class="portal-field">
+                <label for="areaName">Name</label>
+                <input id="areaName" placeholder="Home" />
+              </div>
+              <div class="portal-field">
+                <label for="areaAddress">Address (optional)</label>
+                <input id="areaAddress" placeholder="123 Main St" />
+              </div>
+              <div class="portal-field">
+                <label for="areaDesc">Description</label>
+                <input id="areaDesc" placeholder="Our house" />
+              </div>
+              <div class="portal-field">
+                <label for="areaRadius">Radius (metres)</label>
+                <input id="areaRadius" type="number" placeholder="200" />
+              </div>
+              <div class="portal-field">
+                <label for="areaLat">Latitude</label>
+                <input id="areaLat" type="number" step="any" placeholder="51.5074" />
+              </div>
+              <div class="portal-field">
+                <label for="areaLng">Longitude</label>
+                <input id="areaLng" type="number" step="any" placeholder="-0.1278" />
+              </div>
+            </div>
+            <button class="portal-btn primary" id="addAreaBtn" type="button">Add trusted area</button>
+            <div id="areaStatus" class="portal-status hidden"></div>
+          </section>
+
+          <section class="portal-card">
+            <h2>Team Members</h2>
+            <div id="memberList" style="margin-bottom:1rem"></div>
+            <div class="portal-grid">
+              <div class="portal-field">
+                <label for="memberEmail">Invite email</label>
+                <input id="memberEmail" type="email" placeholder="family@email.com" />
+              </div>
+              <div class="portal-field">
+                <label for="memberRole">Role</label>
+                <select id="memberRole">
+                  <option value="user">User (family view)</option>
+                  <option value="admin_ops">Admin ops</option>
+                </select>
+              </div>
+            </div>
+            <button class="portal-btn" id="inviteBtn" type="button">Invite member</button>
+            <div id="memberStatus" class="portal-status hidden"></div>
+          </section>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- block detail modal -->
+  <div class="modal-backdrop" id="blockModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 id="modalTitle">Notarized Block</h3>
+        <button class="x-btn" id="modalClose" aria-label="Close">×</button>
+      </div>
+      <div class="modal-body">
+        <p id="modalLabel" class="mb-3" style="font-weight:650;color:var(--ink)"></p>
+        <dl class="kv" id="modalKv"></dl>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-note" style="border:none;padding-top:0">
+        <span>Haven Portal Admin · live data from your sidecar · your data and keys never leave your hardware.</span>
+        <span><a href="index.html">← Back to site</a> · <a href="child.html">My Portal →</a></span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/app-launch.js?v=2026071020"></script>
+  <script src="assets/js/config.js?v=2026071020"></script>
+  <script src="assets/js/haven.js?v=2026071020"></script>
+  <script src="assets/js/owner-passcode-auth.js?v=2026071020"></script>
+  <script src="assets/js/admin-auth.js?v=2026071020"></script>
+  <script src="assets/js/ops-auth.js?v=2026071020"></script>
+  <script src="assets/js/ops.js?v=2026071020"></script>
+  <script src="assets/js/ops-live-analytics.js?v=2026071020"></script>
+  <script src="assets/js/ops-parent-controls.js?v=2026071020"></script>
+  <script>
+  (function () {
+    var root = document.querySelector(".ops-shell");
+    if (!window.HavenOpsAuth || !root) return;
+    HavenOpsAuth.init({ mode: "web", contentRoot: root }).then(function (res) {
+      if (res && res.unlocked) {
+        window.dispatchEvent(new CustomEvent("haven:ops:unlocked"));
+      }
+    });
+  })();
+  </script>
+  <script src="assets/js/faqs.js?v=20260711"></script>
+  <script src="assets/js/assist.js?v=20260711"></script>
+  <script src="assets/js/pwa.js?v=2026071020"></script>
+  <script src="assets/js/license-gate.js?v=2026071216"></script>
+  <script src="assets/js/portal-auth.js?v=2026071219"></script>
+  <script src="assets/js/site-logos.js?v=2026071221"></script>
+  <script src="assets/js/ops-portal-admin.js?v=2026071221"></script>
+</body>
+</html>

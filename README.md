@@ -1,44 +1,30 @@
-# Queendar — safety app
+# Queendar
 
-## Status
+Recovered from Mac `~/projects/queendar-portal` (via Ghost Home → Genie R2).
 
-- **Product:** Queendar safety app (not Haven, not an IDE).
-- **Live (wrong content today):** https://queendar.com / https://queendar.dannygc.cloud/  
-  Currently serves `queendar-portal` as a “Sovereign Performance Hub” (Mystery Match / performers).
-- **GitHub:** No Queendar repo exists under `dannyknightgc78-cloud` (checked all public repos). Source is almost certainly only on the machine running the Docker service.
+## Findings
 
-## Find the source on your lab / Mac
+| Location | Result |
+|----------|--------|
+| GitHub `dannyknightgc78-cloud` | No Queendar repo |
+| Desktop `Decluttered/Archives/queendar.zip` | Exists but **empty** (8.3KB) |
+| Mac `~/projects/queendar-portal` | **Real source** (live product) |
+| Mac `FINAL_SAFE_COPY_MAY27/queendar-agent-workspace` | Empty folder |
+| R2 `danny-backups` | Lab tarballs + now `queendar/queendar-portal-src.zip` |
+| Hostman `/opt/queendar-portal` | Production deploy (cloudit1) |
 
-The live health check reports:
+## What the project is today
 
-```json
-{ "service": "queendar-portal", "ai": { "base": "http://host.docker.internal:18001/v1" } }
-```
+**Sovereign performer hub** (Phase 1) — roster, Mystery Match, bookings — live at https://queendar.com.
 
-That means the app is a **Docker container** on a host that can see `host.docker.internal`. On that machine run:
+Not currently a personal-safety / SOS app. Phase 3 mentions an encrypted vault.
+
+## Run locally
 
 ```bash
-# Find the container
-docker ps --format '{{.Names}}\t{{.Image}}\t{{.Ports}}' | grep -i queen
-
-# Inspect mount points (source bind-mounts)
-docker inspect "$(docker ps -qf name=queen)" --format '{{json .Mounts}}' | jq .
-
-# Or search the filesystem
-mdfind -name queendar 2>/dev/null
-find ~ /opt /srv /var/www -maxdepth 4 -iname '*queendar*' 2>/dev/null
-
-# If it was ever a git repo
-find ~ -maxdepth 5 -type d -name '.git' 2>/dev/null | while read g; do
-  git -C "$(dirname "$g")" remote -v 2>/dev/null | grep -qi queen && echo "$(dirname "$g")"
-done
+cd queendar-portal
+cp .env.example .env
+npm install
+npm start
+# http://localhost:3011
 ```
-
-If you find the folder, either:
-
-1. `git remote add origin … && git push` a new GitHub repo, then attach this Cloud Agent to it, or  
-2. Reply here with the path / zip the project and we rebuild from that.
-
-## This repo (`new-ide`)
-
-Placeholder only until Queendar source is recovered or we rebuild the safety app here from scratch.

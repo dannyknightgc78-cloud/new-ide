@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Queendar — Sovereign Performance Hub</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <main class="shell">
+    <header class="hero">
+      <p class="eyebrow">Sovereign · Ad-free · Performer-owned</p>
+      <h1>Queendar</h1>
+      <p class="tagline">
+        A private performance hub where artists own their portfolio, bookings, and fan relationships —
+        without renting space on an extractive feed.
+      </p>
+    </header>
+
+    <section class="panel" id="mystery-panel">
+      <h2>The Mystery Match</h2>
+      <p class="sub">Pick up to three aesthetics. We reveal queens that match your vibe — not a boring search bar.</p>
+      <div class="tag-grid" id="tag-grid" aria-label="Aesthetic tags"></div>
+      <div class="actions">
+        <button class="btn btn-primary" id="match-btn" disabled>Reveal my matches</button>
+        <button class="btn btn-ghost" id="clear-btn" type="button">Clear</button>
+      </div>
+      <div class="form-grid" style="margin-top:1.25rem">
+        <label>Or describe your vibe (AI via Queen / cloudit-gpu)
+          <textarea id="vibe-input" placeholder="Dark glam horror queen with camp humor…" rows="2"></textarea>
+        </label>
+        <button class="btn btn-ghost" type="button" id="vibe-btn">Mystery match from vibe</button>
+      </div>
+      <div class="results" id="match-results" hidden></div>
+    </section>
+
+    <section class="roster">
+      <h2>Performers</h2>
+      <p class="sub" id="roster-empty">Loading roster…</p>
+      <div class="roster-grid" id="roster-grid"></div>
+    </section>
+
+    <footer>
+      Live at <a href="https://queendar.com">queendar.com</a>
+      · <a href="/login">Owner sign in</a>
+      · Separate signup from STICKY
+    </footer>
+  </main>
+  <script src="/app.js" type="module"></script>
+</body>
+</html>

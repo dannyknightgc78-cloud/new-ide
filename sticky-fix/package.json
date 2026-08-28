@@ -1,10 +1,12 @@
 {
   "name": "sticky-fix",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "True circular QR generator for getsticky.men (concentric rings, not square QR)",
+  "type": "module",
+  "main": "circularQr.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "generate": "tsx generate.ts",
+    "generate:preview": "tsx generate.ts https://getsticky.men/onboarding out/preview.svg"
   },
   "keywords": [],
   "author": "",

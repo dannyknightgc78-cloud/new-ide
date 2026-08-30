@@ -1,18 +1,17 @@
 {
-  "name": "vite-react-typescript-starter",
+  "name": "queendar",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
+  "description": "Queendar — LGBTQ+ travel safety radar (queendar.com)",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --open --host",
+    "dev:api": "python3 api/owner-auth.py",
     "build": "vite build",
+    "preview": "vite preview --open --host",
     "lint": "eslint .",
-    "preview": "vite preview",
     "typecheck": "tsc --noEmit -p tsconfig.app.json",
-    "trooper:port": "bash scripts/find-trooper-port.sh",
-    "deploy:trooper": "bash scripts/deploy-trooper.sh",
-    "first:deploy": "bash scripts/first-deploy.sh",
-    "deploy:vultr": "bash scripts/deploy-trooper.sh"
+    "start": "vite preview --host --port 4173"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.57.4",

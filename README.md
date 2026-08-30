@@ -1,33 +1,37 @@
-# Queendar (safety app)
+# Queendar + Sticky (separate products)
 
-Live at **https://queendar.com** — LGBTQ+ travel safety / nightlife companion (Vibe Radar, AI Scan, Crown Log).
+| Product | URL | This repo |
+|---------|-----|-----------|
+| **Queendar** | https://queendar.com | `queendar/` — full safety app + API |
+| **Sticky** | https://getsticky.men | `sticky-fix/` — circular QR for Sticky only |
 
-Performer-hub portal was replaced on Hostman `:3011`; backup remains at `/opt/queendar-portal`.
+## Queendar
 
-## Deploy (from zip)
-
-Canonical app zip: `queendar-src-may.zip` (also on Mac as `~/projects/ghost-home/uploads/queendar.zip`).
-
-Note: Desktop `Archives/queendar.zip` is Cursor session metadata only — not the app.
-
-```bash
-# needs .env with VITE_SUPABASE_URL + VITE_SUPABASE_ANON_KEY
-bash queendar/scripts/deploy-from-zip.sh queendar-src-may.zip
-# or from Mac folder:
-# bash scripts/deploy-hostman-safety.sh hostman
-```
-
-## Local
+Complete source recovered from live Hostman (`/opt/queendar/app` + `owner-auth.py`).
 
 ```bash
 cd queendar
-cp .env.example .env
 npm install
-npm run dev
+npm run dev:api   # terminal 1 — API :3019
+npm run dev       # terminal 2 — opens browser
 ```
 
-## Notes
+Deploy from Mac: `bash queendar/scripts/deploy-hostman-safety.sh hostman`
 
-- Round QR / Sticky is a separate product (`getsticky.men`)
-- Queendar branding images not added yet
-- Source recovered from Mac `~/queendar`
+See `queendar/README.md`.
+
+## Sticky
+
+True concentric-ring QR (not square + rounded corners):
+
+```bash
+cd sticky-fix
+npm install
+npm run generate:preview
+# Deploy on Mac: bash sticky-fix/deploy-to-mac.sh
+```
+
+## Other folders
+
+- `queendar-portal/` — old performer hub (not live; backup on Hostman `/opt/queendar-portal`)
+- `queendar-src-may.zip` — early Bolt starter only; prefer `queendar/` tree above

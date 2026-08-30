@@ -1,10 +1,10 @@
-# Queendar Portal
+# Queendar Portal (archive / backup)
 
 Sovereign performer hub — Phase 1 scaffold.
 
-**Performer-owned profiles · mystery aesthetic matching · direct booking inquiries · Telegram alerts**
+**Not live on queendar.com.** Production `https://queendar.com` runs the **safety app** (radar / scan / SOS). This portal remains as a Hostman backup at `/opt/queendar-portal`.
 
-Deployed at **https://queendar.com** (`queendar.cloudsit.app` and `queendar.dannygc.cloud` 301 here). Hostman + Docker. AI = **cloudit-gpu** Nemotron via `:18001`. Handoff: `QUEEN-HANDOFF.md`.
+Handoff notes below are historical. For the live safety product see `../queendar/README.md`.
 
 ## What ships in Phase 1
 

@@ -1,319 +1,355 @@
-import { useState } from 'react';
-import { MapPin, TrendingUp, Shield, Music, Coffee, ChevronDown, UtensilsCrossed, Wine } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { MapPin, Navigation, Shield, TrendingUp, ChevronDown, Loader2, Phone, AlertTriangle } from 'lucide-react';
+import { api } from '../lib/api';
+import { emergencyFor, type EmergencyInfo } from '../lib/emergency';
+import AwarenessCoach from './AwarenessCoach';
+import SafeHavens, { type Haven } from './SafeHavens';
 
-type VenueTag = {
-  label: string;
-  icon: React.ReactNode;
-};
-
-type Neighborhood = {
+type Hood = {
   name: string;
+  city: string;
+  country: string;
   safetyScore: number;
-  description: string;
-  venueTags: VenueTag[];
+  distanceKm?: number | null;
+  blurb: string;
+  tags: string[];
+  lat: number;
+  lng: number;
+  tips?: string[];
 };
 
 type City = {
   name: string;
   country: string;
   safetyScore: number;
-  trend: 'up' | 'stable' | 'down';
-  neighborhoods: Neighborhood[];
+  trend: string;
+  distanceKm?: number | null;
+  lat: number;
+  lng: number;
+  neighborhoods: Hood[];
 };
 
-const CITIES: City[] = [
-  {
-    name: 'Berlin',
-    country: 'Germany',
-    safetyScore: 95,
-    trend: 'up',
-    neighborhoods: [
-      {
-        name: 'Schöneberg',
-        safetyScore: 96,
-        description: 'The historic heart of Berlin\'s queer scene, home to legendary bars and the annual Pride parade route.',
-        venueTags: [
-          { label: 'Dance Club', icon: <Music className="w-3 h-3" /> },
-          { label: 'Cafe', icon: <Coffee className="w-3 h-3" /> },
-          { label: 'Late Night Dining', icon: <UtensilsCrossed className="w-3 h-3" /> },
-        ],
-      },
-      {
-        name: 'Kreuzberg',
-        safetyScore: 91,
-        description: 'Edgy, inclusive, and unapologetically alternative. A haven for queer artists and underground nightlife.',
-        venueTags: [
-          { label: 'Dance Club', icon: <Music className="w-3 h-3" /> },
-          { label: 'Cocktail Bar', icon: <Wine className="w-3 h-3" /> },
-          { label: 'Cafe', icon: <Coffee className="w-3 h-3" /> },
-        ],
-      },
-      {
-        name: 'Friedrichshain',
-        safetyScore: 88,
-        description: 'Raw energy and warehouse parties. The epicenter of Berlin\'s techno and queer club culture.',
-        venueTags: [
-          { label: 'Dance Club', icon: <Music className="w-3 h-3" /> },
-          { label: 'Late Night Dining', icon: <UtensilsCrossed className="w-3 h-3" /> },
-          { label: 'Cocktail Bar', icon: <Wine className="w-3 h-3" /> },
-        ],
-      },
-    ],
-  },
-  {
-    name: 'Barcelona',
-    country: 'Spain',
-    safetyScore: 87,
-    trend: 'stable',
-    neighborhoods: [
-      {
-        name: 'Eixample',
-        safetyScore: 92,
-        description: 'Known as "Gaixample" — Barcelona\'s vibrant LGBTQ+ district packed with inclusive bars and clubs.',
-        venueTags: [
-          { label: 'Dance Club', icon: <Music className="w-3 h-3" /> },
-          { label: 'Cocktail Bar', icon: <Wine className="w-3 h-3" /> },
-          { label: 'Cafe', icon: <Coffee className="w-3 h-3" /> },
-        ],
-      },
-      {
-        name: 'El Raval',
-        safetyScore: 78,
-        description: 'Bohemian and diverse. Great queer-friendly spots but stay alert at night in quieter side streets.',
-        venueTags: [
-          { label: 'Cafe', icon: <Coffee className="w-3 h-3" /> },
-          { label: 'Late Night Dining', icon: <UtensilsCrossed className="w-3 h-3" /> },
-          { label: 'Cocktail Bar', icon: <Wine className="w-3 h-3" /> },
-        ],
-      },
-      {
-        name: 'Poblenou',
-        safetyScore: 85,
-        description: 'The creative district — emerging queer spaces, beach proximity, and a growing inclusive scene.',
-        venueTags: [
-          { label: 'Cafe', icon: <Coffee className="w-3 h-3" /> },
-          { label: 'Dance Club', icon: <Music className="w-3 h-3" /> },
-          { label: 'Late Night Dining', icon: <UtensilsCrossed className="w-3 h-3" /> },
-        ],
-      },
-    ],
-  },
-  {
-    name: 'London',
-    country: 'United Kingdom',
-    safetyScore: 89,
-    trend: 'up',
-    neighborhoods: [
-      {
-        name: 'Soho',
-        safetyScore: 93,
-        description: 'London\'s iconic queer epicenter — legendary bars, cabaret venues, and a 24/7 inclusive atmosphere.',
-        venueTags: [
-          { label: 'Dance Club', icon: <Music className="w-3 h-3" /> },
-          { label: 'Cocktail Bar', icon: <Wine className="w-3 h-3" /> },
-          { label: 'Late Night Dining', icon: <UtensilsCrossed className="w-3 h-3" /> },
-        ],
-      },
-      {
-        name: 'Vauxhall',
-        safetyScore: 90,
-        description: 'The powerhouse of London\'s late-night queer club scene — dark rooms, mega clubs, and after-hours.',
-        venueTags: [
-          { label: 'Dance Club', icon: <Music className="w-3 h-3" /> },
-          { label: 'Cocktail Bar', icon: <Wine className="w-3 h-3" /> },
-          { label: 'Cafe', icon: <Coffee className="w-3 h-3" /> },
-        ],
-      },
-      {
-        name: 'Dalston',
-        safetyScore: 82,
-        description: 'East London\'s queer-artsy hub — drag, indie nights, and a fiercely inclusive community spirit.',
-        venueTags: [
-          { label: 'Cafe', icon: <Coffee className="w-3 h-3" /> },
-          { label: 'Dance Club', icon: <Music className="w-3 h-3" /> },
-          { label: 'Late Night Dining', icon: <UtensilsCrossed className="w-3 h-3" /> },
-        ],
-      },
-    ],
-  },
+type Incident = {
+  id: string;
+  kind: string;
+  label: string;
+  note: string;
+  lat: number;
+  lng: number;
+  confirms: number;
+  status?: 'unverified' | 'confirmed';
+  created_at: string;
+  distanceKm?: number | null;
+};
+
+const REPORT_KINDS: { id: string; label: string }[] = [
+  { id: 'protest', label: 'Protest' },
+  { id: 'transit', label: 'Transit' },
+  { id: 'violence', label: 'Violence' },
+  { id: 'hazard', label: 'Hazard' },
+  { id: 'police', label: 'Police' },
+  { id: 'other', label: 'Other' },
 ];
 
-function SafetyGauge({ score, size = 'md' }: { score: number; size?: 'sm' | 'md' | 'lg' }) {
-  const color = score >= 85 ? '#22c55e' : score >= 60 ? '#f59e0b' : '#ef4444';
-  const glowColor = score >= 85 ? 'rgba(34,197,94,0.25)' : score >= 60 ? 'rgba(245,158,11,0.25)' : 'rgba(239,68,68,0.25)';
-
-  const radius = size === 'lg' ? 32 : size === 'md' ? 24 : 18;
-  const strokeWidth = size === 'lg' ? 5 : size === 'md' ? 4 : 3;
-  const circumference = 2 * Math.PI * radius;
-  const dashOffset = circumference - (score / 100) * circumference;
-  const svgSize = (radius + strokeWidth) * 2;
-  const fontSize = size === 'lg' ? 'text-lg' : size === 'md' ? 'text-sm' : 'text-[10px]';
-
-  return (
-    <div className="relative flex items-center justify-center flex-shrink-0" style={{ width: svgSize, height: svgSize }}>
-      <svg width={svgSize} height={svgSize} className="-rotate-90">
-        <circle
-          cx={svgSize / 2}
-          cy={svgSize / 2}
-          r={radius}
-          fill="none"
-          stroke="#1a1a1a"
-          strokeWidth={strokeWidth}
-        />
-        <circle
-          cx={svgSize / 2}
-          cy={svgSize / 2}
-          r={radius}
-          fill="none"
-          stroke={color}
-          strokeWidth={strokeWidth}
-          strokeDasharray={circumference}
-          strokeDashoffset={dashOffset}
-          strokeLinecap="round"
-          style={{
-            transition: 'stroke-dashoffset 0.8s cubic-bezier(0.4,0,0.2,1)',
-            filter: `drop-shadow(0 0 8px ${glowColor})`,
-          }}
-        />
-      </svg>
-      <span className={`absolute font-black tabular-nums ${fontSize}`} style={{ color }}>
-        {score}
-      </span>
-    </div>
-  );
+function ago(iso: string) {
+  const ms = Date.now() - new Date(iso).getTime();
+  const mins = Math.max(1, Math.round(ms / 60000));
+  if (mins < 60) return `${mins}m ago`;
+  const hrs = Math.round(mins / 60);
+  return `${hrs}h ago`;
 }
 
-function CityCard({ city }: { city: City }) {
-  const [expanded, setExpanded] = useState(false);
-
-  return (
-    <div className="bg-[#0e0e0e] rounded-2xl border border-[#1c1c1c] overflow-hidden transition-all duration-300">
-      {/* City header — clickable */}
-      <button
-        onClick={() => setExpanded(!expanded)}
-        className="w-full flex items-center justify-between px-4 py-4 text-left hover:bg-[#111111]/50 transition-colors"
-      >
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-[#141414] border border-[#1e1e1e] flex items-center justify-center">
-            <MapPin className="w-4 h-4 text-[#c9a84c]" />
-          </div>
-          <div>
-            <p className="text-white font-bold text-sm">{city.name}</p>
-            <p className="text-[#555555] text-xs">{city.country}</p>
-          </div>
-        </div>
-        <div className="flex items-center gap-3">
-          {city.trend === 'up' && (
-            <div className="flex items-center gap-1 text-emerald-400 bg-emerald-950/40 px-2 py-0.5 rounded-lg">
-              <TrendingUp className="w-3 h-3" />
-              <span className="text-[10px] font-bold">UP</span>
-            </div>
-          )}
-          {city.trend === 'stable' && (
-            <div className="flex items-center gap-1 text-[#777777] bg-[#1a1a1a] px-2 py-0.5 rounded-lg">
-              <Shield className="w-3 h-3" />
-              <span className="text-[10px] font-bold">STABLE</span>
-            </div>
-          )}
-          <SafetyGauge score={city.safetyScore} size="md" />
-          <ChevronDown
-            className={`w-4 h-4 text-[#444444] transition-transform duration-300 ${expanded ? 'rotate-180' : ''}`}
-          />
-        </div>
-      </button>
-
-      {/* City safety bar */}
-      <div className="px-4 pb-3">
-        <div className="flex items-center justify-between mb-1.5">
-          <span className="text-[10px] text-[#555555] uppercase tracking-wider font-semibold">City Safety Score</span>
-          <span className="text-[10px] text-[#777777] font-bold tabular-nums">{city.safetyScore}/100</span>
-        </div>
-        <div className="h-1.5 bg-[#1a1a1a] rounded-full overflow-hidden">
-          <div
-            className="h-full rounded-full"
-            style={{
-              width: `${city.safetyScore}%`,
-              background: city.safetyScore >= 85
-                ? 'linear-gradient(90deg, #16a34a, #22c55e)'
-                : city.safetyScore >= 60
-                ? 'linear-gradient(90deg, #a16207, #f59e0b)'
-                : 'linear-gradient(90deg, #b91c1c, #ef4444)',
-              boxShadow: city.safetyScore >= 85 ? '0 0 8px rgba(34,197,94,0.4)' : city.safetyScore >= 60 ? '0 0 8px rgba(245,158,11,0.3)' : undefined,
-              transition: 'width 0.8s cubic-bezier(0.4,0,0.2,1)',
-            }}
-          />
-        </div>
-      </div>
-
-      {/* Expanded neighborhoods */}
-      <div
-        className={`overflow-hidden transition-all duration-500 ease-in-out ${
-          expanded ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'
-        }`}
-      >
-        <div className="border-t border-[#1c1c1c] px-3 py-3 space-y-2.5">
-          <p className="text-[10px] text-[#444444] uppercase tracking-wider font-semibold px-1">
-            Neighborhoods
-          </p>
-          {city.neighborhoods.map((hood, i) => (
-            <div
-              key={hood.name}
-              className="bg-[#0a0a0a] border border-[#181818] rounded-xl px-4 py-3.5 animate-fade-in"
-              style={{ animationDelay: `${i * 80}ms`, animationFillMode: 'both' }}
-            >
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <p className="text-white text-sm font-bold">{hood.name}</p>
-                    <span
-                      className="text-[10px] font-bold px-1.5 py-0.5 rounded-md tabular-nums"
-                      style={{
-                        color: hood.safetyScore >= 85 ? '#22c55e' : '#f59e0b',
-                        background: hood.safetyScore >= 85 ? 'rgba(34,197,94,0.1)' : 'rgba(245,158,11,0.1)',
-                      }}
-                    >
-                      {hood.safetyScore}
-                    </span>
-                  </div>
-                  <p className="text-[#555555] text-xs mt-1 leading-relaxed">{hood.description}</p>
-
-                  {/* Venue tags */}
-                  <div className="flex flex-wrap gap-1.5 mt-2.5">
-                    {hood.venueTags.map((tag) => (
-                      <button
-                        key={tag.label}
-                        className="flex items-center gap-1 text-[11px] font-semibold px-2.5 py-1.5 rounded-lg bg-[#111111] border border-[#222222] text-[#888888] hover:text-[#c9a84c] hover:border-[#c9a84c]/30 hover:bg-[#c9a84c]/5 transition-all active:scale-95"
-                      >
-                        {tag.icon}
-                        {tag.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <SafetyGauge score={hood.safetyScore} size="sm" />
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
+function gaugeColor(score: number) {
+  return score >= 85 ? '#22c55e' : score >= 60 ? '#f59e0b' : '#ef4444';
 }
 
-export default function VibeRadar() {
+export default function VibeRadar({ guest }: { guest?: boolean }) {
+  const [cities, setCities] = useState<City[]>([]);
+  const [nearest, setNearest] = useState<City | null>(null);
+  const [here, setHere] = useState<{ lat: number; lng: number } | null>(null);
+  const [gps, setGps] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [err, setErr] = useState('');
+  const [open, setOpen] = useState<string | null>('Las Palmas');
+  const [emergency, setEmergency] = useState<EmergencyInfo>(emergencyFor());
+  const [incidents, setIncidents] = useState<Incident[]>([]);
+  const [hood, setHood] = useState<{ name: string; tips?: string[]; blurb?: string } | null>(null);
+  const [havens, setHavens] = useState<Haven[]>([]);
+  const [kind, setKind] = useState('hazard');
+  const [note, setNote] = useState('');
+  const [reportMsg, setReportMsg] = useState('');
+  const [posting, setPosting] = useState(false);
+  const hereRef = useRef(here);
+  hereRef.current = here;
+
+  const load = async (lat?: number, lng?: number) => {
+    const q = lat != null && lng != null ? `?lat=${lat}&lng=${lng}` : '';
+    const data = await api<{
+      cities: City[];
+      nearest: City | null;
+      gps: boolean;
+      here?: { lat: number; lng: number };
+      emergency?: EmergencyInfo;
+      incidents?: Incident[];
+      nearestHood?: { name: string; tips?: string[]; blurb?: string } | null;
+      localTips?: string[];
+      havens?: Haven[];
+    }>(`/api/radar${q}`);
+    setCities(data.cities || []);
+    setNearest(data.nearest || null);
+    setGps(Boolean(data.gps));
+    if (data.here?.lat != null) setHere(data.here);
+    if (data.nearest?.name) setOpen(data.nearest.name);
+    if (data.emergency) setEmergency(data.emergency);
+    else if (lat != null && lng != null) setEmergency(emergencyFor(lat, lng));
+    setIncidents(data.incidents || []);
+    if (data.havens) setHavens(data.havens);
+    if (lat != null && lng != null) {
+      api<{ havens?: Haven[] }>(`/api/havens?lat=${lat}&lng=${lng}`, { timeoutMs: 16000 })
+        .then((h) => { if (h.havens?.length) setHavens(h.havens); })
+        .catch(() => undefined);
+    }
+    if (data.nearestHood) setHood(data.nearestHood);
+    else if (data.localTips?.length) setHood({ name: data.nearest?.name || '', tips: data.localTips });
+  };
+
+  useEffect(() => {
+    let dead = false;
+    (async () => {
+      try {
+        await load();
+        if (!navigator.geolocation) {
+          setLoading(false);
+          return;
+        }
+        navigator.geolocation.getCurrentPosition(
+          async (pos) => {
+            if (dead) return;
+            try {
+              await load(pos.coords.latitude, pos.coords.longitude);
+            } catch {
+              setErr('Radar loaded without live GPS.');
+            }
+            setLoading(false);
+          },
+          () => {
+            if (!dead) setLoading(false);
+          },
+          { enableHighAccuracy: true, timeout: 10000 },
+        );
+      } catch {
+        setErr('Could not load radar.');
+        setLoading(false);
+      }
+    })();
+    const tick = window.setInterval(() => {
+      const h = hereRef.current;
+      if (h) load(h.lat, h.lng).catch(() => undefined);
+    }, 60000);
+    return () => {
+      dead = true;
+      window.clearInterval(tick);
+    };
+  }, []);
+
+  const locate = () => {
+    setLoading(true);
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        try {
+          await load(pos.coords.latitude, pos.coords.longitude);
+        } finally {
+          setLoading(false);
+        }
+      },
+      () => setLoading(false),
+      { enableHighAccuracy: true, timeout: 8000 },
+    );
+  };
+
+  const pin = nearest || cities[0];
+  const mapSrc = pin
+    ? `https://www.openstreetmap.org/export/embed.html?bbox=${pin.lng - 0.08}%2C${pin.lat - 0.06}%2C${pin.lng + 0.08}%2C${pin.lat + 0.06}&layer=mapnik&marker=${pin.lat}%2C${pin.lng}`
+    : '';
+
+  const postAlert = async () => {
+    if (guest) {
+      setReportMsg('Sign in to post a live alert.');
+      return;
+    }
+    if (!here) {
+      setReportMsg('Enable GPS so other travelers see where this is.');
+      return;
+    }
+    setPosting(true);
+    try {
+      await api('/api/incidents', { method: 'POST', body: JSON.stringify({ kind, note, lat: here.lat, lng: here.lng }) });
+      setNote('');
+      setReportMsg('Alert posted for travelers nearby. It expires in 12 hours.');
+      await load(here.lat, here.lng);
+    } catch (e) {
+      setReportMsg(e instanceof Error ? e.message : 'Could not post alert.');
+    } finally {
+      setPosting(false);
+    }
+  };
+
+  const confirmAlert = async (id: string) => {
+    if (guest) {
+      setReportMsg('Sign in to confirm an alert.');
+      return;
+    }
+    try {
+      const data = await api<{ incident?: Incident; already?: boolean }>(`/api/incidents/${id}/confirm`, { method: 'POST' });
+      if (data.incident) {
+        setIncidents((list) => list.map((item) => (item.id === id ? { ...item, ...data.incident } : item)));
+      }
+    } catch (e) {
+      setReportMsg(e instanceof Error ? e.message : 'Could not confirm.');
+    }
+  };
+
   return (
     <div className="pb-8">
-      {/* Header */}
-      <div className="px-4 pt-2 pb-4">
-        <h2 className="text-xl font-bold text-white">Vibe Radar</h2>
-        <p className="text-[#555555] text-sm mt-0.5">Real-time safety intelligence for your community</p>
+      <div className="px-4 pt-2 pb-4 flex items-start justify-between gap-3">
+        <div>
+          <h2 className="text-xl font-bold text-white">Vibe Radar</h2>
+          <p className="text-[#555555] text-sm mt-0.5">
+            {gps && here ? 'Live GPS · scores update with time of day and your scans' : 'Allow location for live neighbourhood scores'}
+          </p>
+        </div>
+        <button onClick={locate} className="text-[#c9a84c] bg-[#111] border border-[#222] rounded-xl p-2">
+          {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Navigation className="w-4 h-4" />}
+        </button>
       </div>
-
-      {/* City cards */}
+      {err && <p className="px-4 text-xs text-red-400 mb-2">{err}</p>}
+      {emergency.primary && (
+        <a
+          href={`tel:${emergency.primary}`}
+          className="mx-4 mb-3 flex items-center justify-between rounded-2xl bg-red-950/40 border border-red-800/50 px-4 py-3"
+        >
+          <div>
+            <p className="text-[10px] uppercase tracking-wider text-red-400 font-bold">Local emergency</p>
+            <p className="text-white font-bold text-sm">{emergency.call || 'Call'} {emergency.primary} · {emergency.country}</p>
+          </div>
+          <Phone className="w-4 h-4 text-red-400" />
+        </a>
+      )}
+      <AwarenessCoach guest={guest} here={here} city={hood?.name || nearest?.name || cities[0]?.name} tips={hood?.tips} incidents={incidents} />
+      {havens.length > 0 && (
+        <div className="mx-4 mb-3 bg-[#0e0e0e] border border-[#1c1c1c] rounded-2xl p-4">
+          <SafeHavens havens={havens} />
+        </div>
+      )}
+      <div className="mx-4 mb-3 bg-[#0e0e0e] border border-[#1c1c1c] rounded-2xl p-4 space-y-3">
+        <div>
+          <p className="text-[10px] uppercase tracking-wider text-[#c9a84c] font-bold">Live traveler alerts</p>
+          <p className="text-white font-bold text-sm">What is happening around you</p>
+          <p className="text-[11px] text-[#666] mt-0.5">Traveler reports. Unverified until someone else confirms. Location is fuzzed. Expires in 12 hours.</p>
+        </div>
+        {incidents.length === 0 && <p className="text-xs text-[#555]">No live alerts nearby. If you see something, post it for other travelers.</p>}
+        {incidents.map((item) => {
+          const confirmed = item.status === 'confirmed' || item.confirms >= 2;
+          return (
+          <div key={item.id} className={`rounded-xl px-3 py-2.5 border ${confirmed ? 'bg-[#14120c] border-[#c9a84c]/40' : 'bg-[#111] border-[#222] opacity-90'}`}>
+            <div className="flex items-start justify-between gap-2">
+              <div className="min-w-0">
+                <p className="text-white text-sm font-bold truncate">{item.label}</p>
+                <p className="text-[11px] text-[#777]">
+                  {confirmed ? 'Confirmed' : 'Unverified'} · {item.distanceKm != null ? `${item.distanceKm} km` : 'Nearby'} · {ago(item.created_at)} · {item.confirms} traveler{item.confirms === 1 ? '' : 's'}
+                </p>
+                {item.note && <p className="text-xs text-[#aaa] mt-1">{item.note}</p>}
+              </div>
+              <button onClick={() => confirmAlert(item.id)} className="text-[11px] font-bold text-[#c9a84c] bg-[#1a1a1a] border border-[#333] rounded-lg px-2 py-1 flex-shrink-0">
+                Confirm
+              </button>
+            </div>
+          </div>
+          );
+        })}
+        <div className="flex flex-wrap gap-1.5">
+          {REPORT_KINDS.map((k) => (
+            <button
+              key={k.id}
+              onClick={() => setKind(k.id)}
+              className={`text-[11px] px-2.5 py-1 rounded-lg border ${kind === k.id ? 'bg-[#7c3aed]/20 border-[#7c3aed] text-white' : 'border-[#222] text-[#888]'}`}
+            >
+              {k.label}
+            </button>
+          ))}
+        </div>
+        <div className="flex gap-2">
+          <input value={note} onChange={(e) => setNote(e.target.value)} placeholder="Optional note" className="flex-1 bg-[#111] border border-[#272727] rounded-xl px-3 py-2 text-sm text-white" />
+          <button onClick={postAlert} disabled={posting} className="bg-red-700 text-white rounded-xl px-3 text-xs font-bold flex items-center gap-1 disabled:opacity-50">
+            {posting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <AlertTriangle className="w-3.5 h-3.5" />}
+            Report
+          </button>
+        </div>
+        {reportMsg && <p className="text-[11px] text-[#c9a84c]">{reportMsg}</p>}
+      </div>
+      {mapSrc && (
+        <div className="mx-4 mb-4 rounded-2xl overflow-hidden border border-[#1c1c1c] h-44">
+          <iframe title="radar map" src={mapSrc} className="w-full h-full grayscale-[0.3] contrast-125" />
+        </div>
+      )}
+      {nearest && gps && (
+        <div className="mx-4 mb-3 bg-[#7c3aed]/10 border border-[#7c3aed]/30 rounded-2xl px-4 py-3">
+          <p className="text-[10px] uppercase tracking-wider text-[#9d5cf5] font-bold">Nearest</p>
+          <p className="text-white font-bold">{nearest.name} · {nearest.safetyScore}/100</p>
+          <p className="text-xs text-[#888]">{nearest.distanceKm != null ? `${nearest.distanceKm} km away` : nearest.country}</p>
+        </div>
+      )}
       <div className="space-y-3 px-4">
-        {CITIES.map((city) => (
-          <CityCard key={city.name} city={city} />
+        {cities.map((city) => (
+          <div key={city.name} className="bg-[#0e0e0e] rounded-2xl border border-[#1c1c1c] overflow-hidden">
+            <button onClick={() => setOpen(open === city.name ? null : city.name)} className="w-full flex items-center justify-between px-4 py-4 text-left">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-[#141414] border border-[#1e1e1e] flex items-center justify-center">
+                  <MapPin className="w-4 h-4 text-[#c9a84c]" />
+                </div>
+                <div>
+                  <p className="text-white font-bold text-sm">{city.name}</p>
+                  <p className="text-[#555] text-xs">
+                    {city.country}
+                    {city.distanceKm != null ? ` · ${city.distanceKm} km` : ''}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                {city.trend === 'up' && (
+                  <span className="text-emerald-400 text-[10px] font-bold flex items-center gap-1"><TrendingUp className="w-3 h-3" />LIVE</span>
+                )}
+                <span className="font-black tabular-nums" style={{ color: gaugeColor(city.safetyScore) }}>{city.safetyScore}</span>
+                <ChevronDown className={`w-4 h-4 text-[#444] ${open === city.name ? 'rotate-180' : ''}`} />
+              </div>
+            </button>
+            {open === city.name && (
+              <div className="border-t border-[#1c1c1c] px-3 py-3 space-y-2">
+                {city.neighborhoods.map((hood) => (
+                  <div key={hood.name} className="bg-[#0a0a0a] border border-[#181818] rounded-xl px-4 py-3">
+                    <div className="flex justify-between gap-2">
+                      <p className="text-white text-sm font-bold">{hood.name}</p>
+                      <span className="text-xs font-bold" style={{ color: gaugeColor(hood.safetyScore) }}>{hood.safetyScore}</span>
+                    </div>
+                    <p className="text-[#555] text-xs mt-1">{hood.blurb}</p>
+                    <div className="flex flex-wrap gap-1.5 mt-2">
+                      {(hood.tags || []).map((tag) => (
+                        <span key={tag} className="text-[11px] px-2 py-1 rounded-lg bg-[#111] border border-[#222] text-[#888]">{tag}</span>
+                      ))}
+                    </div>
+                    <a
+                      className="inline-flex items-center gap-1 text-[11px] text-[#c9a84c] mt-2"
+                      href={`https://maps.google.com/?q=${hood.lat},${hood.lng}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <Shield className="w-3 h-3" /> Open map
+                    </a>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         ))}
       </div>
     </div>

@@ -1,76 +1,96 @@
-import { useState, useEffect } from 'react';
-import { supabase } from './lib/supabase';
-import type { Session } from '@supabase/supabase-js';
+import { useEffect, useState } from 'react';
 import AuthScreen from './components/AuthScreen';
 import Onboarding from './components/Onboarding';
 import Dashboard from './components/Dashboard';
+import Legal from './components/Legal';
+import { clearSession, getUser, setSession, type QueenUser } from './lib/api';
+import { watchArrival } from './lib/arrival';
+import { cacheContacts, silentSos } from './lib/silent-sos';
+import { startWatchGuard } from './lib/watch';
+import { startDistressFlush } from './lib/distress-queue';
+import { loadLocalIce, normalizeIce } from './lib/emergency';
 
-type AppState = 'loading' | 'auth' | 'onboarding' | 'dashboard';
-
-const ONBOARDING_KEY = 'queendar_onboarding_done';
-const GUEST_USER_ID = 'guest';
+type AppState = 'auth' | 'onboarding' | 'dashboard' | 'legal';
+const ONBOARDING_KEY = 'queendar_onboarding_v2';
 
 export default function App() {
-  const [session, setSession] = useState<Session | null>(null);
-  const [appState, setAppState] = useState<AppState>('loading');
-  const [isGuest, setIsGuest] = useState(false);
-
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      if (session) {
-        const done = localStorage.getItem(ONBOARDING_KEY);
-        setAppState(done ? 'dashboard' : 'onboarding');
-      } else {
-        setAppState('auth');
-      }
+    const stopArrival = watchArrival();
+    cacheContacts();
+    const stopFlush = startDistressFlush();
+    const stopWatch = startWatchGuard((kind) => {
+      silentSos({
+        reason: 'timer',
+        ice: normalizeIce(getUser()?.ice) || loadLocalIce(),
+        skipDeviceSms: kind === 'backend',
+      });
     });
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      if (session) {
-        setIsGuest(false);
-        const done = localStorage.getItem(ONBOARDING_KEY);
-        setAppState(done ? 'dashboard' : 'onboarding');
-      } else if (!isGuest) {
-        setAppState('auth');
-      }
-    });
-
-    return () => subscription.unsubscribe();
+    return () => {
+      stopArrival();
+      stopWatch();
+      stopFlush();
+    };
   }, []);
+  const saved = getUser();
+  const [appState, setAppState] = useState<AppState>(() => {
+    if (!saved) return 'auth';
+    return localStorage.getItem(ONBOARDING_KEY) ? 'dashboard' : 'onboarding';
+  });
+  const [legal, setLegal] = useState<'terms' | 'privacy'>('terms');
+  const [isGuest, setIsGuest] = useState(false);
+  const [owner, setOwner] = useState<QueenUser | null>(saved);
 
-  const handleOnboardingComplete = () => {
+  const finishOnboarding = () => {
     localStorage.setItem(ONBOARDING_KEY, '1');
     setAppState('dashboard');
   };
 
-  const handleGuest = () => {
-    setIsGuest(true);
-    localStorage.setItem(ONBOARDING_KEY, '1');
-    setAppState('dashboard');
+  const handleOwner = (user: QueenUser) => {
+    setSession(user, user.token);
+    setOwner(user);
+    setIsGuest(false);
+    if (!localStorage.getItem(ONBOARDING_KEY)) {
+      setAppState('onboarding');
+    } else {
+      setAppState('dashboard');
+    }
   };
 
-  if (appState === 'loading') {
+  if (appState === 'legal') {
+    return <Legal kind={legal} onBack={() => setAppState(owner || isGuest ? 'dashboard' : 'auth')} />;
+  }
+  if (appState === 'auth') {
     return (
-      <div className="min-h-screen bg-[#080808] flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#c9a84c] to-[#e8c96a] flex items-center justify-center shadow-[0_0_24px_rgba(201,168,76,0.35)] animate-pulse">
-            <svg className="w-6 h-6 text-[#080808]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M5 3l7 4 7-4M5 3v14l7 4 7-4V3" />
-            </svg>
-          </div>
-        </div>
-      </div>
+      <AuthScreen
+        onGuest={() => {
+          clearSession();
+          setIsGuest(true);
+          setAppState('onboarding');
+        }}
+        onOwner={handleOwner}
+        onLegal={(kind) => { setLegal(kind); setAppState('legal'); }}
+      />
     );
   }
-
-  if (appState === 'auth') return <AuthScreen onGuest={handleGuest} />;
-  if (appState === 'onboarding') return <Onboarding onComplete={handleOnboardingComplete} />;
-  if (appState === 'dashboard') {
-    const userId = isGuest ? GUEST_USER_ID : session?.user.id;
-    return userId ? <Dashboard userId={userId} /> : <AuthScreen onGuest={handleGuest} />;
+  if (appState === 'onboarding') {
+    return (
+      <Onboarding
+        guest={isGuest || !owner}
+        owner={owner}
+        onUser={(user) => { setOwner(user); setSession(user); }}
+        onComplete={finishOnboarding}
+      />
+    );
   }
-
-  return <AuthScreen onGuest={handleGuest} />;
+  if (owner) {
+    return (
+      <Dashboard
+        userId={owner.id || 'owner'}
+        owner={owner}
+        onUser={(user) => { setOwner(user); setSession(user); }}
+      />
+    );
+  }
+  if (isGuest) return <Dashboard userId="guest" guest />;
+  return <AuthScreen onOwner={handleOwner} onGuest={() => { setIsGuest(true); setAppState('onboarding'); }} />;
 }

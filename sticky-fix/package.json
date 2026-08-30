@@ -1,0 +1,21 @@
+{
+  "name": "sticky-fix",
+  "version": "1.0.0",
+  "description": "True circular QR generator for getsticky.men (concentric rings, not square QR)",
+  "type": "module",
+  "main": "circularQr.ts",
+  "scripts": {
+    "generate": "tsx generate.ts",
+    "generate:preview": "tsx generate.ts https://getsticky.men/onboarding out/preview.svg"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/qrcode": "^1.5.6",
+    "qrcode": "^1.5.4",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.23.12",
+    "typescript": "^7.0.2"
+  }
+}

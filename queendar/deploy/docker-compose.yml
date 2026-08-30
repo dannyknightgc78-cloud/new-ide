@@ -1,0 +1,30 @@
+services:
+  queendar:
+    build: .
+    container_name: queendar-safety
+    restart: unless-stopped
+    expose:
+      - "3011"
+    ports:
+      - "127.0.0.1:3011:3011"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3011/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 10s
+    networks:
+      - coolify
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=coolify
+      - traefik.http.routers.queendar.rule=Host(`queendar.com`) || Host(`www.queendar.com`) || Host(`queendar.cloudsit.app`) || Host(`queendar.dannygc.cloud`)
+      - traefik.http.routers.queendar.entrypoints=https
+      - traefik.http.routers.queendar.tls=true
+      - traefik.http.routers.queendar.tls.certresolver=letsencrypt
+      - traefik.http.routers.queendar.service=queendar
+      - traefik.http.services.queendar.loadbalancer.server.port=3011
+
+networks:
+  coolify:
+    external: true

@@ -1,0 +1,72 @@
+# Global Continue config — all projects. LM Studio default; Trooper Ollama backup.
+name: Sovereign Local
+version: 1.0.0
+schema: v1
+
+models:
+  # DEFAULT — local Mac, free, no Cursor credits (Continue / scripts)
+  - name: LM Studio Qwen 7B (local)
+    provider: openai
+    model: qwen2.5-coder-7b-instruct-mlx
+    apiKey: lm-studio-local
+    apiBase: http://127.0.0.1:1234/v1
+    capabilities:
+      - tool_use
+    roles:
+      - chat
+      - edit
+      - apply
+    defaultCompletionOptions:
+      temperature: 0.3
+      maxTokens: 8192
+
+  # FASTER when Trooper relay is up (~0.7s vs ~1s local) — pick in Continue dropdown
+  - name: Trooper Ollama Coder (remote)
+    provider: openai
+    model: qwen2.5-coder:7b
+    apiBase: http://65.20.110.9:11434/v1
+    apiKey: trooper-local
+    capabilities:
+      - tool_use
+    roles:
+      - chat
+      - edit
+      - apply
+    defaultCompletionOptions:
+      temperature: 0.3
+      maxTokens: 8192
+
+  - name: Trooper Autocomplete
+    provider: openai
+    model: qwen2.5-coder:7b
+    apiBase: http://65.20.110.9:11434/v1
+    apiKey: trooper-local
+    roles:
+      - autocomplete
+    autocompleteOptions:
+      debounceDelay: 350
+      maxPromptTokens: 1024
+      onlyMyCode: true
+
+rules:
+  - Default coder is LM Studio on localhost:1234 — no Cursor cloud credits.
+  - Optional faster remote: Trooper Ollama (65.20.110.9:11434) when relay is healthy.
+  - Cursor Agent (right panel) cannot use localhost — use Continue, Chat+tunnel, or project lm-*.py scripts.
+
+prompts:
+  - name: cloudit-fix
+    description: Full Cloudit rebuild except spatial bridge
+    invokable: true
+    prompt: |
+      FULL REBUILD Cloudit in cloudit/ — everything EXCEPT bridge files:
+      spatial-bookmarks.js, canvas.js, three-scene.js, floating-browser.js,
+      electron/browser-node-main.js, server/src/ai-provider.js
+
+      READ: cloudit/SPEC.md, cloudit/REBUILD.log. Rewrite access/, boot-core, spatial-chrome, gate CSS.
+      Normal login, no bypass. Append REBUILD.log. Never open Cloudit.app.
+
+context:
+  - provider: diff
+  - provider: file
+    params:
+      glob: "**/*.{py,ts,tsx,js,jsx,json,md,yml,yaml,html,css,sh}"

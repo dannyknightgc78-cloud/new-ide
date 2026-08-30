@@ -1,0 +1,15 @@
+[Unit]
+Description=Trooper Ollama SSH tunnel for Queendar AI
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=forking
+Environment=TROOPER_PORT=36195
+ExecStart=/root/queendar-portal/scripts/trooper-ai-tunnel.sh start
+ExecStop=/root/queendar-portal/scripts/trooper-ai-tunnel.sh stop
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Queendar — Sign in</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <main class="shell">
+    <header class="hero">
+      <p class="eyebrow">Separate from STICKY</p>
+      <h1>Queendar</h1>
+      <p class="tagline">Owner sign in. Performer hub — not the dating map.</p>
+    </header>
+    <section class="panel">
+      <form class="form-grid" id="login-form">
+        <label>Username <input name="username" autocomplete="username" required /></label>
+        <label>Password <input name="password" type="password" autocomplete="current-password" required /></label>
+        <button class="btn btn-primary" type="submit">Sign in</button>
+      </form>
+      <p class="status err" id="login-error" hidden></p>
+    </section>
+    <p><a href="/">← Public roster</a></p>
+  </main>
+  <script>
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault()
+      const err = document.getElementById('login-error')
+      err.hidden = true
+      const body = Object.fromEntries(new FormData(e.target))
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        err.textContent = data.error || 'Sign in failed'
+        err.hidden = false
+        return
+      }
+      localStorage.setItem('queendar_token', data.token)
+      window.location.href = '/'
+    })
+  </script>
+</body>
+</html>

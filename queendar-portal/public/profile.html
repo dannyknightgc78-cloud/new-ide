@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Performer — Queendar</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <main class="shell">
+    <p><a href="/">← Back to Queendar</a></p>
+    <header class="profile-header" id="profile-header">
+      <p class="eyebrow">Sovereign Portfolio</p>
+      <h1 id="stage-name">Loading…</h1>
+      <p class="meta" id="profile-meta"></p>
+      <div class="chips" id="profile-chips"></div>
+      <p id="profile-bio"></p>
+      <div class="actions" id="profile-actions"></div>
+    </header>
+
+    <section class="panel" id="booking-panel" hidden>
+      <h2>Booking inquiry</h2>
+      <p class="sub">Send a direct inquiry — no platform middleman.</p>
+      <form class="form-grid" id="booking-form">
+        <label>Your name <input name="name" required autocomplete="name" /></label>
+        <label>Email <input name="email" type="email" required autocomplete="email" /></label>
+        <label>Event date <input name="eventDate" placeholder="e.g. 2026-07-15" /></label>
+        <label>Venue <input name="venue" placeholder="Venue or city" /></label>
+        <label>Message <textarea name="message" placeholder="Tell us about the gig…"></textarea></label>
+        <button class="btn btn-primary" type="submit">Send inquiry</button>
+      </form>
+      <p class="status" id="booking-status"></p>
+    </section>
+
+    <p class="status err" id="profile-error" hidden></p>
+  </main>
+  <script src="/profile.js" type="module"></script>
+</body>
+</html>

@@ -55,9 +55,9 @@ const PRESETS: Preset[] = [
   {
     id: 'trial-sticky',
     title: '7-day Premium Sticky',
-    blurb: 'NFC sticky for a 7-day QueenDar Plus / premium trial.',
+    blurb: 'Camera-readable sticky for a 7-day QueenDar Plus / premium trial.',
     url: 'https://queendar.com/trial/7-day',
-    codeType: CodeTypeNFC,
+    codeType: CodeTypeCamera,
     colorMode: 'custom',
     templateIndex: 14,
     foreground: 'FFFFFF',
@@ -65,7 +65,7 @@ const PRESETS: Preset[] = [
     third: '9D5CF5',
     useCustomThird: true,
     fileName: 'queendar-7day-premium-sticky',
-    badge: 'NFC sticky',
+    badge: 'Camera',
   },
 ]
 
@@ -278,8 +278,8 @@ function App() {
           <p className="brand">Queendar</p>
           <h1>App Clip Codes</h1>
           <p className="subtitle">
-            Two ready-to-print codes: the main Queendar clip, and an NFC sticky for the 7-day
-            premium trial. Tweak colors, logo style, and export SVG or PNG.
+            Two ready-to-print, camera-readable codes: the main Queendar clip, and a sticky for
+            the 7-day premium trial. Tweak colors, logo style, and export SVG or PNG.
           </p>
         </div>
       </header>
@@ -331,7 +331,7 @@ function App() {
                 className={codeType === CodeTypeNFC ? 'active' : ''}
                 onClick={() => update('codeType', CodeTypeNFC)}
               >
-                NFC sticky
+                NFC
               </button>
             </div>
           </fieldset>

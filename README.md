@@ -3,7 +3,7 @@
 Browser app that generates Apple App Clip Codes for Queendar:
 
 1. **Queendar** — main camera-style code for `https://queendar.com`
-2. **7-day Premium Sticky** — NFC sticky code for `https://queendar.com/trial/7-day`
+2. **7-day Premium Sticky** — camera-readable sticky for `https://queendar.com/trial/7-day`
 
 Built with Vite, React, and [`appclipcode`](https://github.com/rs/appclipcode).
 

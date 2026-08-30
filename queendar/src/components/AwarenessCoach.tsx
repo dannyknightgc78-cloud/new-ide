@@ -235,7 +235,7 @@ export default function AwarenessCoach({
           <button
             key={c.id}
             onClick={() => toggle(c.id)}
-            className={`text-[11px] px-2.5 py-1 rounded-lg border ${tags.includes(c.id) ? 'bg-[#7c3aed]/20 border-[#7c3aed] text-white' : 'border-[#222] text-[#888]'}`}
+            className={`text-[11px] px-2.5 py-1 rounded-lg border ${tags.includes(c.id) ? 'bg-[#c9a84c]/20 border-[#c9a84c] text-white' : 'border-[#222] text-[#888]'}`}
           >
             {c.label}
           </button>
@@ -259,7 +259,7 @@ export default function AwarenessCoach({
           placeholder="Ask RTX: walking home, first date, rumour…"
           className="flex-1 bg-[#111] border border-[#272727] rounded-xl px-3 py-2 text-sm text-white"
         />
-        <button onClick={() => ask()} disabled={busy} className="bg-[#7c3aed] text-white rounded-xl px-3 disabled:opacity-50">
+        <button onClick={() => ask()} disabled={busy} className="bg-[#c9a84c] text-[#080808] rounded-xl px-3 disabled:opacity-50">
           {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <MessageCircle className="w-4 h-4" />}
         </button>
       </div>

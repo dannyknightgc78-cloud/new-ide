@@ -272,7 +272,7 @@ export default function VibeRadar({ guest }: { guest?: boolean }) {
             <button
               key={k.id}
               onClick={() => setKind(k.id)}
-              className={`text-[11px] px-2.5 py-1 rounded-lg border ${kind === k.id ? 'bg-[#7c3aed]/20 border-[#7c3aed] text-white' : 'border-[#222] text-[#888]'}`}
+              className={`text-[11px] px-2.5 py-1 rounded-lg border ${kind === k.id ? 'bg-[#c9a84c]/20 border-[#c9a84c] text-white' : 'border-[#222] text-[#888]'}`}
             >
               {k.label}
             </button>
@@ -293,8 +293,8 @@ export default function VibeRadar({ guest }: { guest?: boolean }) {
         </div>
       )}
       {nearest && gps && (
-        <div className="mx-4 mb-3 bg-[#7c3aed]/10 border border-[#7c3aed]/30 rounded-2xl px-4 py-3">
-          <p className="text-[10px] uppercase tracking-wider text-[#9d5cf5] font-bold">Nearest</p>
+        <div className="mx-4 mb-3 bg-[#c9a84c]/10 border border-[#c9a84c]/30 rounded-2xl px-4 py-3">
+          <p className="text-[10px] uppercase tracking-wider text-[#c9a84c] font-bold">Nearest</p>
           <p className="text-white font-bold">{nearest.name} · {nearest.safetyScore}/100</p>
           <p className="text-xs text-[#888]">{nearest.distanceKm != null ? `${nearest.distanceKm} km away` : nearest.country}</p>
         </div>

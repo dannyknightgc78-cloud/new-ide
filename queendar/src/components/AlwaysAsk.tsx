@@ -73,7 +73,7 @@ export default function AlwaysAsk() {
           placeholder={`Ask RTX · ${label}`}
           className="flex-1 bg-[#111] border border-[#222] rounded-xl px-3 py-2 text-sm text-white"
         />
-        <button onClick={() => ask()} disabled={busy} className="bg-[#7c3aed] text-white rounded-xl px-3 py-2 disabled:opacity-50">
+        <button onClick={() => ask()} disabled={busy} className="bg-[#c9a84c] text-[#080808] rounded-xl px-3 py-2 disabled:opacity-50">
           {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <MessageCircle className="w-4 h-4" />}
         </button>
       </div>

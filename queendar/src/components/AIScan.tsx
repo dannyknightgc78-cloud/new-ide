@@ -101,7 +101,7 @@ export default function AIScan() {
           </button>
         )}
         <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={(e) => e.target.files?.[0] && setUploadedFile(e.target.files[0])} />
-        <button onClick={handleScan} disabled={scanning || (!venueName.trim() && !uploadedFile)} className="w-full py-3.5 rounded-xl font-bold text-sm bg-gradient-to-r from-[#7c3aed] to-[#9d5cf5] text-white disabled:opacity-40 flex items-center justify-center gap-2">
+        <button onClick={handleScan} disabled={scanning || (!venueName.trim() && !uploadedFile)} className="w-full py-3.5 rounded-xl font-bold text-sm bg-gradient-to-r from-[#c9a84c] to-[#e8c96a] text-[#080808] disabled:opacity-40 flex items-center justify-center gap-2">
           {scanning ? <><Loader2 className="w-4 h-4 animate-spin" /> Scanning...</> : 'Scan Venue'}
         </button>
         {error && <div className="bg-red-950/40 border border-red-800/50 rounded-xl px-4 py-3 text-red-400 text-sm">{error}</div>}

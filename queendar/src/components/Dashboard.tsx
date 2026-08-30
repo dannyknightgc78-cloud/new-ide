@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Crown, Radar, Scan, BookOpen, Settings, LogOut, Trash2, ChevronDown, Loader2, ShieldAlert, User } from 'lucide-react';
+import { Radar, Scan, BookOpen, Settings, LogOut, Trash2, ChevronDown, Loader2, ShieldAlert, User, Crown } from 'lucide-react';
 import VibeRadar from './VibeRadar';
 import AIScan from './AIScan';
 import CrownLog from './CrownLog';
@@ -7,6 +7,7 @@ import SosPanel from './SosPanel';
 import AlwaysAsk from './AlwaysAsk';
 import OfflineBar from './OfflineBar';
 import FlipCard from './FlipCard';
+import BrandMark from './BrandMark';
 import { api, clearSession, setSession, type QueenUser } from '../lib/api';
 import { emergencyFor, loadLocalIce, normalizeIce, type IceCard } from '../lib/emergency';
 import { getWatchUntil, openFlip, remain, subscribeWatch } from '../lib/watch';
@@ -161,19 +162,12 @@ export default function Dashboard({ owner, guest, onUser }: Props) {
   };
 
   return (
-    <div className="min-h-screen bg-[#080808] flex flex-col max-w-lg mx-auto">
-      <header className="flex items-center justify-between px-4 pt-12 pb-4 bg-[#080808] border-b border-[#111111] sticky top-0 z-30">
+    <div className="min-h-screen bg-qd-atmosphere flex flex-col max-w-lg mx-auto">
+      <header className="flex items-center justify-between px-4 pt-12 pb-4 bg-[#080808]/90 backdrop-blur-md border-b border-[#1a1610] sticky top-0 z-30">
         <div className="flex items-center gap-2.5">
-          <button
-            type="button"
-            onClick={crownTap}
-            className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#c9a84c] to-[#e8c96a] flex items-center justify-center"
-            aria-label="QueenDar — triple tap for a silent ping"
-          >
-            <Crown className="w-4 h-4 text-[#080808]" strokeWidth={2.5} />
-          </button>
+          <BrandMark size="sm" showWordmark={false} onMarkClick={crownTap} />
           <div>
-            <p className="text-white font-bold text-sm leading-none">Queendar</p>
+            <p className="text-[#f3e6b5] font-display font-bold text-base leading-none tracking-wide">Queendar</p>
             <p className="text-[#c9a84c] text-[10px] mt-0.5 font-medium">
               Welcome, {displayName}
               {owner?.premium === 'lifetime' ? ' · Lifetime Premium' : isPlus ? ' · Plus' : ''}
@@ -232,7 +226,7 @@ export default function Dashboard({ owner, guest, onUser }: Props) {
                   <input value={ice.meds} onChange={(e) => setIce({ ...ice, meds: e.target.value })} placeholder="Medications" className="w-full bg-[#0a0a0a] border border-[#222] rounded-xl px-3 py-2 text-sm text-white" />
                   <input value={ice.bloodType} onChange={(e) => setIce({ ...ice, bloodType: e.target.value })} placeholder="Blood type" className="w-full bg-[#0a0a0a] border border-[#222] rounded-xl px-3 py-2 text-sm text-white" />
                   <textarea value={ice.notes} onChange={(e) => setIce({ ...ice, notes: e.target.value })} placeholder="Notes for first responders" rows={2} className="w-full bg-[#0a0a0a] border border-[#222] rounded-xl px-3 py-2 text-sm text-white resize-none" />
-                  <button onClick={() => saveProfile().catch((e) => setMsg(e.message))} className="w-full py-2 rounded-xl bg-[#7c3aed] text-white text-xs font-bold">Save profile</button>
+                  <button onClick={() => saveProfile().catch((e) => setMsg(e.message))} className="w-full py-2 rounded-xl bg-[#c9a84c] text-[#080808] text-xs font-bold">Save profile</button>
                   <input type="password" value={currentPw} onChange={(e) => setCurrentPw(e.target.value)} placeholder="Current password" className="w-full bg-[#0a0a0a] border border-[#222] rounded-xl px-3 py-2 text-sm text-white" />
                   <input type="password" value={newPw} onChange={(e) => setNewPw(e.target.value)} placeholder="New password" className="w-full bg-[#0a0a0a] border border-[#222] rounded-xl px-3 py-2 text-sm text-white" />
                   <button onClick={() => changePassword().catch((e) => setMsg(e.message))} className="w-full py-2 rounded-xl border border-[#333] text-[#ccc] text-xs font-bold">Change password</button>
@@ -282,7 +276,7 @@ export default function Dashboard({ owner, guest, onUser }: Props) {
       <nav className="sticky bottom-0 bg-[#080808] border-t border-[#111] px-2">
         <div className="flex">
           {TABS.map((t) => (
-            <button key={t.id} onClick={() => setTab(t.id)} className={`flex-1 flex flex-col items-center gap-1 py-3.5 text-[10px] font-semibold ${tab === t.id ? 'text-[#7c3aed]' : 'text-[#444]'}`}>
+            <button key={t.id} onClick={() => setTab(t.id)} className={`flex-1 flex flex-col items-center gap-1 py-3.5 text-[10px] font-semibold ${tab === t.id ? 'text-[#c9a84c]' : 'text-[#444]'}`}>
               {t.icon}
               {t.label}
             </button>

@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { ChevronRight, Crown, HeartPulse, Phone, ShieldAlert } from 'lucide-react';
+import { ChevronRight, HeartPulse, Phone, ShieldAlert } from 'lucide-react';
 import { api, setSession, type QueenUser } from '../lib/api';
 import { blankIce, emergencyFor, iceFilled, loadLocalIce, normalizeIce, saveLocalIce, type IceCard } from '../lib/emergency';
 import { AID_NOTICE } from '../lib/disclaimer';
+import BrandMark from './BrandMark';
 
 type Props = { onComplete: () => void; owner?: QueenUser | null; guest?: boolean; onUser?: (user: QueenUser) => void };
 
@@ -70,14 +71,12 @@ export default function Onboarding({ onComplete, owner, guest, onUser }: Props) 
   const tel = `tel:${(em.primary || '112').replace(/\s/g, '')}`;
 
   return (
-    <div className="min-h-screen bg-[#080808] flex flex-col px-4 pt-16 pb-8 max-w-lg mx-auto">
-      <div className="flex items-center gap-2 mb-8">
-        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#c9a84c] to-[#e8c96a] flex items-center justify-center">
-          <Crown className="w-4 h-4 text-[#080808]" strokeWidth={2.5} />
-        </div>
+    <div className="min-h-screen bg-qd-atmosphere flex flex-col px-4 pt-16 pb-8 max-w-lg mx-auto">
+      <div className="flex items-center gap-3 mb-8">
+        <BrandMark size="sm" showWordmark={false} />
         <div>
-          <p className="text-white font-bold text-sm">30-second setup</p>
-          <p className="text-[#555] text-[11px]">Step {step + 1} of 3 · skip anything you want</p>
+          <p className="text-[#f3e6b5] font-display font-bold text-lg leading-none tracking-wide">Queendar</p>
+          <p className="text-[#555] text-[11px] mt-1">30-second setup · Step {step + 1} of 3</p>
         </div>
       </div>
 
@@ -114,7 +113,7 @@ export default function Onboarding({ onComplete, owner, guest, onUser }: Props) 
       {step === 2 && (
         <div className="space-y-4 flex-1">
           <h1 className="text-2xl font-black text-white flex items-center gap-2">
-            <ShieldAlert className="w-6 h-6 text-[#7c3aed]" /> One-tap tools
+            <ShieldAlert className="w-6 h-6 text-[#c9a84c]" /> One-tap tools
           </h1>
           <p className="text-sm text-[#888]">Radar has I've arrived, a 30-minute check-in, and a pin you can share. SOS is for people you trust — plus the big call button.</p>
           <div className="bg-[#0e0e0e] border border-[#1c1c1c] rounded-2xl p-4 space-y-2 text-sm text-[#ccc]">

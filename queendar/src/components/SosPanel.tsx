@@ -321,7 +321,7 @@ export default function SosPanel({ guest, owner, onUser }: Props) {
         <div className="flex gap-2">
           <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Name" className="flex-1 bg-[#111] border border-[#272727] rounded-xl px-3 py-2 text-sm text-white" />
           <input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Phone" className="flex-1 bg-[#111] border border-[#272727] rounded-xl px-3 py-2 text-sm text-white" />
-          <button onClick={addContact} className="bg-[#7c3aed] rounded-xl px-3 text-white"><Plus className="w-4 h-4" /></button>
+          <button onClick={addContact} className="bg-[#c9a84c] rounded-xl px-3 text-[#080808]"><Plus className="w-4 h-4" /></button>
         </div>
         {contacts.length === 0 && <p className="text-xs text-[#555]">Add someone who should get your SOS text (GPS + ICE summary).</p>}
         {contacts.map((c) => (

@@ -52,6 +52,6 @@ Production layout on Hostman:
 
 ## Notes
 
-- Branding photos not added yet — PWA uses gold crown `icon.svg`.
+- Branding: gold crown + radar mark, Cormorant/Manrope, OG image at `/og.png`
 - Performer portal code lives in `../queendar-portal` (backup only — not live on queendar.com).
 - Trooper / Vultr scripts under `scripts/` are retired; use Hostman deploy.

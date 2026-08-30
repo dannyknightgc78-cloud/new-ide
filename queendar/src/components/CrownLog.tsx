@@ -83,7 +83,7 @@ export default function CrownLog({ guest }: Props) {
       </div>
       {guest && <p className="text-sm text-[#666] text-center py-10">Sign in to keep a private encrypted journal.</p>}
       {showForm && (
-        <div className="bg-[#0e0e0e] border border-[#7c3aed]/40 rounded-2xl p-4 mb-4 space-y-3">
+        <div className="bg-[#0e0e0e] border border-[#c9a84c]/40 rounded-2xl p-4 mb-4 space-y-3">
           <div className="flex items-center justify-between">
             <p className="text-sm font-bold text-white">New Entry</p>
             <button onClick={() => setShowForm(false)} className="text-[#555]"><X className="w-4 h-4" /></button>
@@ -97,7 +97,7 @@ export default function CrownLog({ guest }: Props) {
             </select>
             <input value={location} onChange={(e) => setLocation(e.target.value)} placeholder="City or venue..." className="bg-[#111] border border-[#272727] rounded-xl px-3 py-2.5 text-white text-xs" />
           </div>
-          <button onClick={handleSave} disabled={saving || !title.trim() || !body.trim()} className="w-full py-3 rounded-xl font-bold text-sm bg-gradient-to-r from-[#7c3aed] to-[#9d5cf5] text-white disabled:opacity-40 flex items-center justify-center gap-2">
+          <button onClick={handleSave} disabled={saving || !title.trim() || !body.trim()} className="w-full py-3 rounded-xl font-bold text-sm bg-gradient-to-r from-[#c9a84c] to-[#e8c96a] text-[#080808] disabled:opacity-40 flex items-center justify-center gap-2">
             {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Save Entry'}
           </button>
         </div>

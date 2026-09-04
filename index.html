@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BLAZE TV — Splash</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --magenta: #ff006e;
+      --violet: #7b4397;
+      --cyan: #00d4ff;
+      --orange: #ff6a00;
+      --ink: #05030a;
+      --scan: rgba(255, 255, 255, 0.04);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      background: var(--ink);
+      color: #fff;
+      font-family: "Share Tech Mono", monospace;
+    }
+
+    .stage {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      display: grid;
+      place-items: center;
+      isolation: isolate;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 45%, rgba(123, 67, 151, 0.35), transparent 55%),
+        radial-gradient(ellipse 50% 40% at 20% 80%, rgba(255, 0, 110, 0.18), transparent 50%),
+        radial-gradient(ellipse 50% 40% at 80% 20%, rgba(0, 212, 255, 0.15), transparent 50%),
+        linear-gradient(180deg, #0a0614 0%, #05030a 50%, #020107 100%);
+    }
+
+    .stage::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        var(--scan) 2px,
+        var(--scan) 4px
+      );
+      pointer-events: none;
+      z-index: 5;
+      opacity: 0.55;
+      mix-blend-mode: soft-light;
+    }
+
+    .vignette {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 6;
+      background: radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.75) 100%);
+      box-shadow: inset 0 0 120px rgba(0, 0, 0, 0.85);
+    }
+
+    .static-noise {
+      position: absolute;
+      inset: -10%;
+      width: 120%;
+      height: 120%;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 4;
+      mix-blend-mode: screen;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+      animation: noise-shift 0.12s steps(3) infinite;
+    }
+
+    .static-noise.on {
+      opacity: 0.22;
+    }
+
+    @keyframes noise-shift {
+      0% { transform: translate(0, 0); }
+      25% { transform: translate(-2%, 1%); }
+      50% { transform: translate(1%, -2%); }
+      75% { transform: translate(-1%, 2%); }
+      100% { transform: translate(2%, -1%); }
+    }
+
+    .beam {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 2px;
+      height: 2px;
+      border-radius: 50%;
+      background: #fff;
+      transform: translate(-50%, -50%) scale(0);
+      box-shadow: 0 0 40px 20px rgba(255, 255, 255, 0.9);
+      z-index: 3;
+      opacity: 0;
+    }
+
+    .beam.fire {
+      animation: beam-burst 0.85s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    }
+
+    @keyframes beam-burst {
+      0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scaleX(0.01) scaleY(0.01);
+        box-shadow: 0 0 20px 8px #fff;
+      }
+      35% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scaleX(80) scaleY(0.08);
+        box-shadow: 0 0 60px 18px var(--cyan);
+      }
+      70% {
+        opacity: 0.85;
+        transform: translate(-50%, -50%) scaleX(0.2) scaleY(70);
+        box-shadow: 0 0 80px 30px var(--magenta);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(120);
+        box-shadow: 0 0 120px 60px transparent;
+      }
+    }
+
+    .logo-wrap {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      opacity: 0;
+      transform: scale(0.72) translateY(18px);
+      filter: blur(12px);
+    }
+
+    .logo-wrap.reveal {
+      animation: logo-reveal 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes logo-reveal {
+      0% {
+        opacity: 0;
+        transform: scale(0.72) translateY(18px);
+        filter: blur(12px);
+      }
+      55% {
+        opacity: 1;
+        filter: blur(0);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+        filter: blur(0);
+      }
+    }
+
+    .logo-aura {
+      position: absolute;
+      left: 50%;
+      top: 42%;
+      width: min(92vw, 720px);
+      height: 48%;
+      transform: translate(-50%, -50%);
+      border-radius: 40%;
+      background: conic-gradient(
+        from 0deg,
+        transparent 0deg,
+        var(--orange) 70deg,
+        var(--magenta) 140deg,
+        var(--violet) 210deg,
+        var(--cyan) 280deg,
+        transparent 360deg
+      );
+      filter: blur(28px);
+      opacity: 0.55;
+      z-index: 0;
+      pointer-events: none;
+      animation: glow 2.5s ease-in-out infinite, spin-glow 8s linear infinite;
+    }
+
+    .blaze-logo {
+      font-family: "Orbitron", sans-serif;
+      font-size: clamp(2.4rem, 9vw, 5.5rem);
+      font-weight: 900;
+      letter-spacing: 0.18em;
+      line-height: 1;
+      padding-left: 0.18em;
+      position: relative;
+      z-index: 1;
+      display: inline-block;
+      text-transform: uppercase;
+      color: transparent;
+      background-image: linear-gradient(
+        115deg,
+        #ff4d9a 0%,
+        var(--magenta) 18%,
+        #c45cff 38%,
+        var(--cyan) 58%,
+        #5ce1ff 72%,
+        var(--orange) 88%,
+        #ff4d9a 100%
+      );
+      background-size: 220% 220%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradient-shift 5s linear infinite, pulse-glow 3s ease-in-out infinite;
+    }
+
+    .blaze-logo.glitch {
+      animation:
+        gradient-shift 5s linear infinite,
+        pulse-glow 3s ease-in-out infinite,
+        glitch-skew 0.45s steps(2) 3;
+    }
+
+    .tagline {
+      margin-top: 1.1rem;
+      font-size: clamp(0.7rem, 2vw, 0.95rem);
+      letter-spacing: 0.55em;
+      text-transform: uppercase;
+      color: rgba(0, 212, 255, 0.75);
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    .tagline.show {
+      animation: fade-up 0.8s ease 0.35s forwards;
+    }
+
+    .status {
+      position: absolute;
+      bottom: 8vh;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 7;
+      font-size: 0.75rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.45);
+      opacity: 0;
+    }
+
+    .status.show {
+      animation: fade-up 0.6s ease forwards;
+    }
+
+    .gate {
+      position: absolute;
+      inset: 0;
+      z-index: 20;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(ellipse at center, rgba(123, 67, 151, 0.25), transparent 55%),
+        #05030a;
+      cursor: pointer;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+
+    .gate.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .gate-card {
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .gate-title {
+      font-family: "Orbitron", sans-serif;
+      font-weight: 900;
+      font-size: clamp(1.6rem, 5vw, 2.6rem);
+      letter-spacing: 0.2em;
+      background: linear-gradient(135deg, var(--magenta), var(--violet), var(--cyan));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.85rem;
+    }
+
+    .gate-hint {
+      color: rgba(255, 255, 255, 0.55);
+      letter-spacing: 0.28em;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      margin-bottom: 1.75rem;
+    }
+
+    .play-btn {
+      appearance: none;
+      border: 1px solid rgba(0, 212, 255, 0.45);
+      background: linear-gradient(135deg, rgba(255, 0, 110, 0.18), rgba(123, 67, 151, 0.25), rgba(0, 212, 255, 0.12));
+      color: #fff;
+      font-family: "Orbitron", sans-serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      padding: 1rem 1.8rem;
+      border-radius: 999px;
+      cursor: pointer;
+      box-shadow: 0 0 30px rgba(255, 0, 110, 0.25);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .play-btn:hover,
+    .play-btn:focus-visible {
+      transform: translateY(-2px) scale(1.03);
+      border-color: var(--cyan);
+      box-shadow: 0 0 40px rgba(0, 212, 255, 0.35);
+      outline: none;
+    }
+
+    .mute-toggle {
+      position: absolute;
+      top: 1.25rem;
+      right: 1.25rem;
+      z-index: 8;
+      appearance: none;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(0, 0, 0, 0.35);
+      color: rgba(255, 255, 255, 0.75);
+      font-family: "Share Tech Mono", monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 0.55rem 0.85rem;
+      border-radius: 999px;
+      cursor: pointer;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease, border-color 0.2s ease;
+    }
+
+    .mute-toggle.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .mute-toggle:hover {
+      border-color: var(--cyan);
+      color: #fff;
+    }
+
+    .replay {
+      position: absolute;
+      bottom: 3.5vh;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 8;
+      appearance: none;
+      border: none;
+      background: transparent;
+      color: rgba(255, 255, 255, 0.4);
+      font-family: "Share Tech Mono", monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      cursor: pointer;
+      opacity: 0;
+      pointer-events: none;
+      transition: color 0.2s ease, opacity 0.3s ease;
+    }
+
+    .replay.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .replay:hover {
+      color: var(--cyan);
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% {
+        text-shadow:
+          0 0 18px rgba(255, 0, 110, 0.45),
+          0 0 42px rgba(123, 67, 151, 0.35);
+      }
+      50% {
+        text-shadow:
+          0 0 28px rgba(255, 0, 110, 0.8),
+          0 0 60px rgba(0, 212, 255, 0.45),
+          0 0 90px rgba(255, 106, 0, 0.3);
+      }
+    }
+
+    @keyframes glow {
+      0%, 100% { opacity: 0.35; }
+      50% { opacity: 0.75; }
+    }
+
+    @keyframes gradient-shift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @keyframes spin-glow {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes fade-up {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes glitch-skew {
+      0% { transform: translate(0); }
+      20% { transform: translate(-4px, 1px) skewX(-2deg); }
+      40% { transform: translate(5px, -1px) skewX(2deg); }
+      60% { transform: translate(-2px, 2px); }
+      80% { transform: translate(3px, -2px) skewX(-1deg); }
+      100% { transform: translate(0); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .blaze-logo,
+      .blaze-logo::after,
+      .static-noise,
+      .beam {
+        animation: none !important;
+      }
+
+      .logo-wrap.reveal,
+      .tagline.show,
+      .status.show {
+        opacity: 1;
+        transform: none;
+        filter: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="stage" id="stage" aria-live="polite">
+    <div class="gate" id="gate" role="dialog" aria-label="Start BLAZE TV splash">
+      <div class="gate-card">
+        <div class="gate-title">BLAZE TV</div>
+        <p class="gate-hint">Power on sequence · audio enabled</p>
+        <button class="play-btn" id="startBtn" type="button">▶ Start Broadcast</button>
+      </div>
+    </div>
+
+    <div class="static-noise" id="noise" aria-hidden="true"></div>
+    <div class="beam" id="beam" aria-hidden="true"></div>
+
+    <div class="logo-wrap" id="logoWrap">
+      <div class="logo-aura" aria-hidden="true"></div>
+      <div class="blaze-logo" id="logo">BLAZE TV</div>
+      <p class="tagline" id="tagline">Live · Unfiltered · On Fire</p>
+    </div>
+
+    <p class="status" id="status">Signal acquired</p>
+    <button class="mute-toggle" id="muteBtn" type="button" aria-pressed="false">Mute</button>
+    <button class="replay" id="replayBtn" type="button">Replay splash</button>
+    <div class="vignette" aria-hidden="true"></div>
+  </div>
+
+  <script>
+    (() => {
+      const gate = document.getElementById("gate");
+      const startBtn = document.getElementById("startBtn");
+      const noise = document.getElementById("noise");
+      const beam = document.getElementById("beam");
+      const logoWrap = document.getElementById("logoWrap");
+      const logo = document.getElementById("logo");
+      const tagline = document.getElementById("tagline");
+      const status = document.getElementById("status");
+      const muteBtn = document.getElementById("muteBtn");
+      const replayBtn = document.getElementById("replayBtn");
+
+      let audioCtx = null;
+      let masterGain = null;
+      let muted = false;
+      let playing = false;
+      let timers = [];
+
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      function clearTimers() {
+        timers.forEach((id) => clearTimeout(id));
+        timers = [];
+      }
+
+      function later(fn, ms) {
+        const id = setTimeout(fn, ms);
+        timers.push(id);
+        return id;
+      }
+
+      function ensureAudio() {
+        if (!audioCtx) {
+          const Ctx = window.AudioContext || window.webkitAudioContext;
+          audioCtx = new Ctx();
+          masterGain = audioCtx.createGain();
+          masterGain.gain.value = muted ? 0 : 0.85;
+          masterGain.connect(audioCtx.destination);
+        }
+        if (audioCtx.state === "suspended") {
+          return audioCtx.resume();
+        }
+        return Promise.resolve();
+      }
+
+      function setMute(next) {
+        muted = next;
+        muteBtn.textContent = muted ? "Unmute" : "Mute";
+        muteBtn.setAttribute("aria-pressed", String(muted));
+        if (masterGain) {
+          masterGain.gain.setTargetAtTime(muted ? 0 : 0.85, audioCtx.currentTime, 0.03);
+        }
+      }
+
+      function noiseBurst(duration = 0.35, volume = 0.18) {
+        if (!audioCtx || muted) return;
+        const bufferSize = Math.floor(audioCtx.sampleRate * duration);
+        const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          data[i] = (Math.random() * 2 - 1) * (1 - i / bufferSize);
+        }
+        const src = audioCtx.createBufferSource();
+        const filter = audioCtx.createBiquadFilter();
+        const gain = audioCtx.createGain();
+        src.buffer = buffer;
+        filter.type = "bandpass";
+        filter.frequency.value = 1800;
+        filter.Q.value = 0.7;
+        gain.gain.setValueAtTime(volume, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        src.connect(filter);
+        filter.connect(gain);
+        gain.connect(masterGain);
+        src.start();
+        src.stop(audioCtx.currentTime + duration + 0.02);
+      }
+
+      function tone({ freq = 220, type = "sawtooth", duration = 0.4, volume = 0.12, slideTo = null }) {
+        if (!audioCtx || muted) return;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        const filter = audioCtx.createBiquadFilter();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        if (slideTo != null) {
+          osc.frequency.exponentialRampToValueAtTime(Math.max(20, slideTo), audioCtx.currentTime + duration);
+        }
+        filter.type = "lowpass";
+        filter.frequency.value = 2400;
+        gain.gain.setValueAtTime(0.0001, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(volume, audioCtx.currentTime + 0.03);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+        osc.connect(filter);
+        filter.connect(gain);
+        gain.connect(masterGain);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration + 0.05);
+      }
+
+      function chordHit() {
+        if (!audioCtx || muted) return;
+        const notes = [110, 164.81, 220, 329.63];
+        notes.forEach((freq, i) => {
+          later(() => {
+            tone({
+              freq,
+              type: i % 2 === 0 ? "sawtooth" : "triangle",
+              duration: 1.1,
+              volume: 0.08 - i * 0.01,
+              slideTo: freq * 1.01,
+            });
+          }, i * 30);
+        });
+        noiseBurst(0.25, 0.12);
+      }
+
+      function powerOnSound() {
+        noiseBurst(0.55, 0.22);
+        tone({ freq: 60, type: "sine", duration: 0.7, volume: 0.15, slideTo: 180 });
+        later(() => noiseBurst(0.2, 0.15), 280);
+        later(() => tone({ freq: 90, type: "square", duration: 0.25, volume: 0.05, slideTo: 40 }), 420);
+      }
+
+      function resetVisuals() {
+        noise.classList.remove("on");
+        beam.classList.remove("fire");
+        void beam.offsetWidth;
+        logoWrap.classList.remove("reveal");
+        logo.classList.remove("glitch");
+        tagline.classList.remove("show");
+        status.classList.remove("show");
+        status.textContent = "Signal acquired";
+        replayBtn.classList.remove("visible");
+        muteBtn.classList.remove("visible");
+      }
+
+      async function runSplash() {
+        if (playing) return;
+        playing = true;
+        clearTimers();
+        resetVisuals();
+
+        await ensureAudio();
+        gate.classList.add("hidden");
+        muteBtn.classList.add("visible");
+
+        status.textContent = "Powering on…";
+        status.classList.add("show");
+        noise.classList.add("on");
+        powerOnSound();
+
+        later(() => {
+          beam.classList.add("fire");
+          tone({ freq: 420, type: "sine", duration: 0.35, volume: 0.1, slideTo: 1200 });
+        }, reduceMotion ? 100 : 700);
+
+        later(() => {
+          noise.classList.remove("on");
+          logoWrap.classList.add("reveal");
+          chordHit();
+          status.textContent = "Broadcast locked";
+        }, reduceMotion ? 200 : 1100);
+
+        later(() => {
+          logo.classList.add("glitch");
+          noiseBurst(0.18, 0.1);
+          tagline.classList.add("show");
+        }, reduceMotion ? 400 : 1650);
+
+        later(() => {
+          status.textContent = "BLAZE TV · ON AIR";
+          replayBtn.classList.add("visible");
+          playing = false;
+        }, reduceMotion ? 700 : 2600);
+      }
+
+      startBtn.addEventListener("click", () => {
+        runSplash();
+      });
+
+      gate.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          runSplash();
+        }
+      });
+
+      muteBtn.addEventListener("click", () => {
+        ensureAudio().then(() => setMute(!muted));
+      });
+
+      replayBtn.addEventListener("click", () => {
+        runSplash();
+      });
+    })();
+  </script>
+</body>
+</html>

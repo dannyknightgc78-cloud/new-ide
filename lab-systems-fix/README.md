@@ -1,20 +1,22 @@
-# Lab Systems Fix — GhostGrid · Probes · Dual RTX
+# Lab Systems Fix — Nimbus Urge · Aegis · GhostGrid · Dual RTX
 
-Drop-in recovery for [lab.dannygc.cloud/systems](https://lab.dannygc.cloud/systems) when GhostGrid shows **OFFLINE**, probes stall, and dual RTX panels never appear.
+Drop-in recovery for [lab.dannygc.cloud/systems](https://lab.dannygc.cloud/systems) and [nimbus.dannygc.cloud/urge](https://nimbus.dannygc.cloud/urge) when Aegis is down, GhostGrid shows **OFFLINE**, probes stall, and dual RTX panels never appear.
 
-## Live diagnosis (2026-09-04)
+## Live diagnosis (Nimbus Urge)
 
 | Check | Result |
 |-------|--------|
-| `https://ghostgrid.dannygc.cloud/api/health` | **OK** (~200ms) |
-| `https://ghostgrid.dannygc.cloud/api/abx/verify` | **PASS** |
-| `https://ghostgrid.dannygc.cloud/api/ghostgrid/adversarial/pulse` | **500** (probes broken) |
-| `lab …/api/ops/ghostgrid/load` | **OK but ~48s** (UI aborts at 15s → OFFLINE) |
-| `lab …/api/ops/services/dashboard` | **probe timeout** → all GPUs `available:false` |
-| `lab …/api/ops/servers/local` | `gpu: null`, `gpus: []` (lab VM has no NVIDIA) |
-| `lab …/protect/api/health` (Aegis) | **502** |
+| Nimbus `/api/status` health_score | **~50%** (many `cloudsit.app` public DOWNs) |
+| Nimbus `infra.watchdog` | **down** |
+| Nimbus server `rtx-pro` | **OK** — label `RTX Pro 6000 x2` |
+| `ghostgrid.dannygc.cloud/api/health` | **OK** (~200ms) |
+| `lab …/api/ops/ghostgrid/load` | **~48s** (SPA 15s timeout → OFFLINE) |
+| `lab …/api/ops/services/dashboard` | probe timeout → no GPU panels |
+| `lab …/protect/api/health` (Aegis Station) | **502** (nginx proxy) |
+| `protect.dannygc.cloud` | **up** (API auth-gated) |
+| GhostGrid `/adversarial/pulse` | **500** |
 
-Root cause: GhostGrid itself is up. Lab’s ops aggregator probes too slowly (and hits broken `/adversarial/*` paths). The SPA treats that as offline. Dual RTX lives on the cloudit-gpu peer; dashboard probes never finish, so panels stay empty.
+Root cause: GhostGrid + RTX peer are healthy. Lab’s slow GhostGrid aggregator, broken `/protect/` proxy (Aegis), and down watchdog make `/systems` look offline. Dual RTX is confirmed by Nimbus (`rtx-pro`) but dashboard probes never finish.
 
 ## Apply on Hostman (cloudit1 / fra-1-vm-fpgk)
 
@@ -33,11 +35,12 @@ bash /path/to/lab-systems-fix/hostman-console-systems-fix.sh
 
 ## What the scripts do
 
-1. **`ghostgrid_fast_load.py`** — builds the exact JSON shape `/api/ops/ghostgrid/load` must return, using only fast public GhostGrid endpoints (`/api/health`, `/api/ghostgrid/stats`, `/api/abx/*`). Skips the broken `/adversarial/*` routes. Target: **&lt;2s**.
-2. **`dual_gpu_status.py`** — emits `gpu.panels[]` for dual RTX (index 0 + 1) from `nvidia-smi` or a remote probe URL. Lab UI already prefers `gpu.panels` over the single `blackwell` stub.
-3. **`patch_carl_ops.py`** — hot-patches a running carl-ops / FastAPI tree under `/root/lab-dannygc` to wire the fast loader + dual GPU panels + shorter probe timeouts.
-4. **`hostman-console-systems-fix.sh`** — restarts GhostGrid/ABX, Aegis (`protect`), systems-agent, applies the patch, verifies latency.
-5. **`diagnose.sh`** — external health probe (run from anywhere).
+1. **`nimbus_urge_check.py`** — pulls Nimbus Urge `/api/status` + live path probes; prints actionable fix list (watchdog, Aegis 502, GhostGrid load, dual GPU, cloudsit tunnel).
+2. **`ghostgrid_fast_load.py`** — builds the exact JSON shape `/api/ops/ghostgrid/load` must return, using only fast public GhostGrid endpoints. Skips broken `/adversarial/*`. Target: **&lt;2s**.
+3. **`dual_gpu_status.py`** — emits `gpu.panels[]` for dual RTX (`#0`/`#1`) from `nvidia-smi` or `ai.dannygc.cloud`.
+4. **`patch_carl_ops.py`** — hot-patches carl-ops under `/root/lab-dannygc`.
+5. **`hostman-console-systems-fix.sh`** — Nimbus Urge recovery: restart watchdog + Aegis/protect, fix nginx `/protect/api` proxy, patch GhostGrid/GPU, soft-restart cloudflared for cloudsit DOWNs.
+6. **`diagnose.sh`** — external health probe (run from anywhere).
 
 ## Verify
 

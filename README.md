@@ -2,14 +2,20 @@
 
 Cloud agent workspace for DannyGC projects.
 
-## Lab systems fix (GhostGrid · probes · dual RTX)
+## Lab systems fix (Nimbus Urge · Aegis · GhostGrid · dual RTX)
 
 See [`lab-systems-fix/README.md`](lab-systems-fix/README.md).
 
-GhostGrid at https://ghostgrid.dannygc.cloud is healthy; lab `/systems` shows it OFFLINE because `/api/ops/ghostgrid/load` takes ~48s (UI timeout 15s). Dual RTX panels are empty because dashboard probes time out. Aegis `/protect/api` returns 502.
+Nimbus Urge (`https://nimbus.dannygc.cloud/urge`) shows fleet health ~50%, **watchdog down**, while **RTX Pro 6000 x2** is OK. Lab `/systems` Aegis is **502** (`/protect/api`), GhostGrid load is too slow for the UI, dual RTX panels empty.
 
 **Apply on Hostman:**
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/dannyknightgc78-cloud/new-ide/cursor/ghostgrid-probes-rtx-f89d/lab-systems-fix/hostman-console-systems-fix.sh | bash
+```
+
+**Check from anywhere:**
+
+```bash
+python3 lab-systems-fix/nimbus_urge_check.py
 ```

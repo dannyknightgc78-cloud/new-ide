@@ -32,7 +32,11 @@ check "Lab GhostGrid load (must be <15s for UI)" "https://lab.dannygc.cloud/api/
 check "Lab services dashboard (GPU panels)" "https://lab.dannygc.cloud/api/ops/services/dashboard" 20
 check "Lab local server metrics" "https://lab.dannygc.cloud/api/ops/servers/local" 8
 check "Aegis protect health" "https://lab.dannygc.cloud/protect/api/health" 8
+check "Protect protocol (auth ok)" "https://protect.dannygc.cloud/api/protocol/status" 8
+check "Nimbus Urge status" "https://nimbus.dannygc.cloud/api/status" 12
+check "Nimbus health" "https://nimbus.dannygc.cloud/api/health" 5
 check "AI /v1/models (GPU peer)" "https://ai.dannygc.cloud/v1/models" 8
+check "Monitor" "https://monitor.dannygc.cloud/" 8
 
 echo
 if [[ -f /tmp/diag_body ]]; then
@@ -43,5 +47,6 @@ fi
 echo
 echo "Failures: $FAIL"
 echo "If GhostGrid load > 15s → SPA shows OFFLINE even when GhostGrid is healthy."
+echo "Nimbus Urge board: https://nimbus.dannygc.cloud/urge"
 echo "Apply: lab-systems-fix/hostman-console-systems-fix.sh on Hostman."
 exit "$FAIL"

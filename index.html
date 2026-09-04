@@ -167,6 +167,30 @@
       }
     }
 
+    .logo-aura {
+      position: absolute;
+      left: 50%;
+      top: 42%;
+      width: min(92vw, 720px);
+      height: 48%;
+      transform: translate(-50%, -50%);
+      border-radius: 40%;
+      background: conic-gradient(
+        from 0deg,
+        transparent 0deg,
+        var(--orange) 70deg,
+        var(--magenta) 140deg,
+        var(--violet) 210deg,
+        var(--cyan) 280deg,
+        transparent 360deg
+      );
+      filter: blur(28px);
+      opacity: 0.55;
+      z-index: 0;
+      pointer-events: none;
+      animation: glow 2.5s ease-in-out infinite, spin-glow 8s linear infinite;
+    }
+
     .blaze-logo {
       font-family: "Orbitron", sans-serif;
       font-size: clamp(2.4rem, 9vw, 5.5rem);
@@ -174,41 +198,32 @@
       letter-spacing: 0.18em;
       line-height: 1;
       padding-left: 0.18em;
-      background: linear-gradient(135deg, var(--magenta), var(--violet), var(--cyan), var(--orange), var(--magenta));
+      position: relative;
+      z-index: 1;
+      display: inline-block;
+      text-transform: uppercase;
+      color: transparent;
+      background-image: linear-gradient(
+        115deg,
+        #ff4d9a 0%,
+        var(--magenta) 18%,
+        #c45cff 38%,
+        var(--cyan) 58%,
+        #5ce1ff 72%,
+        var(--orange) 88%,
+        #ff4d9a 100%
+      );
+      background-size: 220% 220%;
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
-      background-size: 220% 220%;
-      animation: pulse 3s ease-in-out infinite, gradient-shift 5s linear infinite;
-      position: relative;
-      display: inline-block;
-      text-transform: uppercase;
-    }
-
-    .blaze-logo::after {
-      content: "";
-      position: absolute;
-      inset: -18% -8%;
-      border-radius: 12px;
-      background: conic-gradient(
-        from 0deg,
-        transparent,
-        var(--orange),
-        var(--magenta),
-        var(--violet),
-        var(--cyan),
-        transparent
-      );
-      z-index: -1;
-      filter: blur(18px);
-      opacity: 0.55;
-      animation: glow 2.5s ease-in-out infinite, spin-glow 8s linear infinite;
+      animation: gradient-shift 5s linear infinite, pulse-glow 3s ease-in-out infinite;
     }
 
     .blaze-logo.glitch {
       animation:
-        pulse 3s ease-in-out infinite,
         gradient-shift 5s linear infinite,
+        pulse-glow 3s ease-in-out infinite,
         glitch-skew 0.45s steps(2) 3;
     }
 
@@ -372,14 +387,23 @@
       color: var(--cyan);
     }
 
-    @keyframes pulse {
-      0%, 100% { filter: none; }
-      50% { filter: drop-shadow(0 0 28px var(--magenta)); }
+    @keyframes pulse-glow {
+      0%, 100% {
+        text-shadow:
+          0 0 18px rgba(255, 0, 110, 0.45),
+          0 0 42px rgba(123, 67, 151, 0.35);
+      }
+      50% {
+        text-shadow:
+          0 0 28px rgba(255, 0, 110, 0.8),
+          0 0 60px rgba(0, 212, 255, 0.45),
+          0 0 90px rgba(255, 106, 0, 0.3);
+      }
     }
 
     @keyframes glow {
-      0%, 100% { opacity: 0.4; transform: translateY(0); }
-      50% { opacity: 0.8; transform: translateY(-5px); }
+      0%, 100% { opacity: 0.35; }
+      50% { opacity: 0.75; }
     }
 
     @keyframes gradient-shift {
@@ -440,6 +464,7 @@
     <div class="beam" id="beam" aria-hidden="true"></div>
 
     <div class="logo-wrap" id="logoWrap">
+      <div class="logo-aura" aria-hidden="true"></div>
       <div class="blaze-logo" id="logo">BLAZE TV</div>
       <p class="tagline" id="tagline">Live · Unfiltered · On Fire</p>
     </div>

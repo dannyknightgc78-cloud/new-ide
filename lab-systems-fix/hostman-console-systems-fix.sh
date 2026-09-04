@@ -72,6 +72,90 @@ do
   restart_unit "$u" || true
 done
 
+echo "==> Bring systems-agent back on :8788 (screenshot: Host stats unavailable / Systems API 502)"
+# Kill stuck listeners that accept then hang (causes Cloudflare 502 on /api/ops/*)
+if command -v fuser >/dev/null 2>&1; then
+  fuser -k 8788/tcp 2>/dev/null || true
+fi
+pkill -f 'systems-agent|systems:agent|ops-agent.*8788' 2>/dev/null || true
+sleep 1
+
+# Locate package.json that defines systems:agent
+AGENT_DIR=""
+for cand in \
+  /root/lab-dannygc /opt/lab-dannygc /var/www/lab-dannygc \
+  /root/carl-ops /opt/carl-ops /root/systems-agent /opt/systems-agent \
+  /root/trooper /opt/trooper /home/*/lab-dannygc /home/*/projects/dannygc/*
+do
+  # shellcheck disable=SC2086
+  for pkg in $cand/package.json $cand/*/package.json; do
+    [[ -f "$pkg" ]] || continue
+    if grep -q 'systems:agent\|"systems-agent"' "$pkg" 2>/dev/null; then
+      AGENT_DIR=$(dirname "$pkg")
+      break 2
+    fi
+  done
+done
+
+start_systems_agent() {
+  local dir="$1"
+  echo "systems-agent package at $dir"
+  cd "$dir"
+  if [[ -f package-lock.json ]]; then npm ci --ignore-scripts 2>/dev/null || npm install --ignore-scripts 2>/dev/null || true
+  else npm install --ignore-scripts 2>/dev/null || true
+  fi
+  # Prefer systemd unit we install below; also start now in background
+  nohup npm run systems:agent > /var/log/systems-agent.log 2>&1 &
+  echo $! > /run/systems-agent.pid
+  sleep 2
+  cd "$WORK"
+}
+
+if [[ -n "$AGENT_DIR" ]]; then
+  start_systems_agent "$AGENT_DIR"
+  # Persist via systemd if missing
+  if ! systemctl cat systems-agent >/dev/null 2>&1; then
+    cat > /etc/systemd/system/systems-agent.service <<EOF
+[Unit]
+Description=Lab systems-agent (:8788)
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=${AGENT_DIR}
+ExecStart=/usr/bin/npm run systems:agent
+Restart=always
+RestartSec=5
+Environment=PORT=8788
+Environment=HOST=0.0.0.0
+
+[Install]
+WantedBy=multi-user.target
+EOF
+    systemctl daemon-reload
+    systemctl enable --now systems-agent
+    echo "installed systemd systems-agent.service"
+  else
+    systemctl restart systems-agent || start_systems_agent "$AGENT_DIR"
+  fi
+else
+  echo "WARNING: no package.json with systems:agent found — create/start manually: npm run systems:agent"
+fi
+
+# Verify :8788
+if curl -sf -m 3 http://127.0.0.1:8788/api/health >/dev/null 2>&1 \
+  || curl -sf -m 3 http://127.0.0.1:8788/health >/dev/null 2>&1; then
+  echo "systems-agent OK on :8788"
+else
+  echo "WARNING: :8788 still not responding — ops routes will keep 502/timeout"
+  ss -lntp | grep 8788 || true
+  tail -n 40 /var/log/systems-agent.log 2>/dev/null || true
+fi
+
+# carl-ops hung workers often cause /api/ops/* Cloudflare 502 — bounce after agent is up
+restart_unit carl-ops || true
+restart_unit lab-dannygc || true
+
 # Also match any unit name containing these tokens
 echo "==> Scan systemd for matching units"
 systemctl list-unit-files --type=service --no-legend 2>/dev/null | awk '{print $1}' \
@@ -189,6 +273,10 @@ for url in \
   "https://protect.dannygc.cloud/api/protocol/status" \
   "https://lab.dannygc.cloud/api/ops/ghostgrid/load" \
   "https://lab.dannygc.cloud/api/ops/services/dashboard" \
+  "https://lab.dannygc.cloud/api/ops/empire/nodes" \
+  "https://lab.dannygc.cloud/api/ops/services/registry" \
+  "https://lab.dannygc.cloud/api/ops/servers/local" \
+  "http://127.0.0.1:8788/api/health" \
   "https://ghostgrid.dannygc.cloud/api/health" \
   "https://nimbus.dannygc.cloud/api/health"
 do

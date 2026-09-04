@@ -89,24 +89,39 @@ def analyze(status: dict[str, Any]) -> dict[str, Any]:
         ("aegis_protect_protocol", "https://protect.dannygc.cloud/api/protocol/status"),
         ("ghostgrid_load", "https://lab.dannygc.cloud/api/ops/ghostgrid/load"),
         ("services_dashboard", "https://lab.dannygc.cloud/api/ops/services/dashboard"),
+        ("empire_nodes", "https://lab.dannygc.cloud/api/ops/empire/nodes"),
+        ("services_registry", "https://lab.dannygc.cloud/api/ops/services/registry"),
+        ("servers_local", "https://lab.dannygc.cloud/api/ops/servers/local"),
         ("ghostgrid_pulse", "https://ghostgrid.dannygc.cloud/api/ghostgrid/adversarial/pulse"),
         ("monitor", "https://monitor.dannygc.cloud/"),
         ("nimbus_health", "https://nimbus.dannygc.cloud/api/health"),
+        ("genie_health", "https://genie.dannygc.cloud/api/health"),
+        ("ai_models", "https://ai.dannygc.cloud/v1/models"),
     ]:
-        code, secs = live_probe(url, timeout=12 if "ghostgrid_load" in name or "dashboard" in name else 8)
+        slow = name in {"ghostgrid_load", "services_dashboard", "empire_nodes", "services_registry", "servers_local"}
+        code, secs = live_probe(url, timeout=12 if slow else 8)
         ok = code in {200, 401}  # 401 = up but auth-gated
-        # ghostgrid load: 200 that takes forever is still a problem; flag slow
+        # hung ops routes → Cloudflare 502 / browser "Systems API 502"
         live[name] = {"http": code, "sec": round(secs, 3), "ok": ok and secs < 12}
 
     actions: list[str] = []
     if infra.get("watchdog") == "down" or "watchdog" in infra_bad:
         actions.append("Restart nimbus-watchdog / systems-agent (infra.watchdog=down)")
+    hung_ops = [k for k in ("empire_nodes", "services_registry", "servers_local", "services_dashboard", "ghostgrid_load") if not live[k]["ok"]]
+    if hung_ops:
+        actions.append(
+            "systems-agent offline / hung ops API ("
+            + ", ".join(hung_ops)
+            + ") — run npm run systems:agent on :8788; bounce carl-ops (screenshot: Systems API 502, 1/6 live)"
+        )
     if not live["aegis_lab_protect"]["ok"]:
         actions.append("Fix nginx proxy lab.dannygc.cloud/protect/ → Aegis (currently 502); restart aegis/protect unit")
     if not live["ghostgrid_load"]["ok"]:
         actions.append("Apply ghostgrid_fast_load patch — /api/ops/ghostgrid/load too slow for SPA")
     if not live["services_dashboard"]["ok"]:
-        actions.append("Apply dual_gpu_status + shorten dashboard probe timeouts")
+        actions.append("Apply dual_gpu_status + shorten dashboard probe timeouts (CLOUDIT-GPU / dual RTX)")
+    if live.get("ai_models", {}).get("ok") and not live["services_dashboard"]["ok"]:
+        actions.append("ai.dannygc.cloud/v1/models is OK — dual RTX peer alive; lab dashboard probes are the failure")
     if not live["ghostgrid_pulse"]["ok"]:
         actions.append("Repair GhostGrid /api/ghostgrid/adversarial/* (500) — probes/warroom pulse")
     if not live["monitor"]["ok"]:

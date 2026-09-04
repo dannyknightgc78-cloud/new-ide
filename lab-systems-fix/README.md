@@ -15,8 +15,10 @@ Drop-in recovery for [lab.dannygc.cloud/systems](https://lab.dannygc.cloud/syste
 | `lab …/protect/api/health` (Aegis Station) | **502** (nginx proxy) |
 | `protect.dannygc.cloud` | **up** (API auth-gated) |
 | GhostGrid `/adversarial/pulse` | **500** |
+| `lab …/api/ops/empire|registry|servers/*` | **timeout → Systems API 502** in UI |
+| systems-agent `:8788` | **offline** — “Host stats unavailable”, VM & GPU **1/6 live** |
 
-Root cause: GhostGrid + RTX peer are healthy. Lab’s slow GhostGrid aggregator, broken `/protect/` proxy (Aegis), and down watchdog make `/systems` look offline. Dual RTX is confirmed by Nimbus (`rtx-pro`) but dashboard probes never finish.
+Root cause: GhostGrid + RTX peer are healthy. **systems-agent on :8788 is down**, so carl-ops `/api/ops/*` hangs and Cloudflare surfaces **Systems API 502**. Empire peers (Genie etc.) can be fine publicly while the lattice card shows OFF. Dual RTX is confirmed by Nimbus (`rtx-pro`) but dashboard probes never finish.
 
 ## Apply on Hostman (cloudit1 / fra-1-vm-fpgk)
 

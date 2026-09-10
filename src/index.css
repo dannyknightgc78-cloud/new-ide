@@ -83,11 +83,6 @@ p {
   justify-content: space-between;
   gap: 1rem;
   padding: 1rem 1.5rem;
-  pointer-events: none;
-}
-
-.topnav > * {
-  pointer-events: auto;
 }
 
 .brand-mark {

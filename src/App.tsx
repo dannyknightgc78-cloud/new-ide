@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   bracket,
   clubs,
@@ -11,6 +11,13 @@ import {
 } from './data/competition'
 
 type View = 'home' | 'tonight' | 'path' | 'clubs'
+
+const views: View[] = ['home', 'tonight', 'path', 'clubs']
+
+function viewFromHash(): View {
+  const raw = window.location.hash.replace('#', '') as View
+  return views.includes(raw) ? raw : 'home'
+}
 
 const fade = {
   initial: { opacity: 0, y: 18 },
@@ -331,18 +338,34 @@ function Footer() {
 }
 
 export default function App() {
-  const [view, setView] = useState<View>('home')
+  const [view, setView] = useState<View>(() =>
+    typeof window !== 'undefined' ? viewFromHash() : 'home',
+  )
+
+  useEffect(() => {
+    const onHash = () => setView(viewFromHash())
+    window.addEventListener('hashchange', onHash)
+    return () => window.removeEventListener('hashchange', onHash)
+  }, [])
+
+  const go = (next: View) => {
+    setView(next)
+    const hash = next === 'home' ? '' : `#${next}`
+    if (window.location.hash !== hash) {
+      window.history.pushState(null, '', hash || window.location.pathname)
+    }
+  }
 
   return (
     <div className="app">
-      <Nav view={view} setView={setView} />
+      <Nav view={view} setView={go} />
       <AnimatePresence mode="wait">
         <motion.main
           key={view}
           {...fade}
           transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
         >
-          {view === 'home' && <Hero go={setView} />}
+          {view === 'home' && <Hero go={go} />}
           {view === 'tonight' && <TonightView />}
           {view === 'path' && <PathView />}
           {view === 'clubs' && <ClubsView />}
